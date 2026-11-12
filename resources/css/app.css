@@ -1,0 +1,124 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+[x-cloak] {
+    display: none !important;
+}
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Roboto', 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+    --color-indigo-50: #EAF3FA;
+    --color-indigo-100: #D7E9F7;
+    --color-indigo-200: #B5D4EC;
+    --color-indigo-300: #92BDDF;
+    --color-indigo-400: #6EA4CE;
+    --color-indigo-500: #2C6491;
+    --color-indigo-600: #064A80;
+    --color-indigo-700: #053E6D;
+    --color-indigo-800: #0C3E66;
+    --color-indigo-900: #103550;
+    --color-indigo-950: #0A2D49;
+
+    --color-slate-50: #F8FAFC;
+    --color-slate-100: #EFF5F9;
+    --color-slate-200: #DCE6EE;
+    --color-slate-300: #BDCFDE;
+    --color-slate-400: #5F7386;
+    --color-slate-500: #5F7386;
+    --color-slate-600: #425D75;
+    --color-slate-700: #304E68;
+    --color-slate-800: #24435D;
+    --color-slate-900: #14344F;
+    --color-slate-950: #081D2E;
+
+    --color-banner-start: #064A80;
+    --color-banner-end: #0C3E66;
+    --color-banner-icon: #2C6491;
+    --color-ink: #0C3E66;
+    --color-surface-dark: #102C43;
+    --color-muted-light: #ADC6D9;
+    --color-sidebar-muted: #D5E5F1;
+    --color-emerald-600: #15803D;
+    --color-red-600: #B91C1C;
+    --color-amber-700: #B45309;
+}
+
+@layer base {
+    body {
+        @apply font-sans text-base/6 font-normal;
+    }
+
+    h1 {
+        @apply text-2xl font-bold tracking-tight;
+    }
+
+    h2 {
+        @apply text-xl font-semibold;
+    }
+
+    h3 {
+        @apply text-lg font-semibold;
+    }
+
+    code, kbd, samp, pre {
+        @apply font-mono text-sm;
+    }
+}
+
+@layer components {
+    .page-banner {
+        @apply rounded-2xl px-6 py-7 sm:px-8 sm:py-8;
+        background-color: var(--color-banner-start);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='46' height='46' viewBox='0 0 46 46'%3E%3Cpath d='M23 17v12M17 23h12' stroke='white' stroke-opacity='.035' stroke-width='2'/%3E%3C/svg%3E"), linear-gradient(110deg, var(--color-banner-start), var(--color-banner-end));
+    }
+}
+
+@layer utilities {
+    .page-banner :is(h1, h2) {
+        color: white;
+    }
+
+    .page-banner p {
+        color: var(--color-sidebar-muted);
+    }
+
+    .page-banner > span {
+        color: white;
+        background-color: var(--color-banner-icon);
+        border: 1px solid rgb(255 255 255 / 20%);
+    }
+
+    .app-sidebar [aria-current='page'] {
+        @apply bg-indigo-50 text-indigo-700;
+    }
+}
+
+@layer components {
+    .whatsapp-support-button {
+        box-shadow: 0 0 18px rgb(37 211 102 / 65%), 0 0 36px rgb(37 211 102 / 35%);
+        animation: whatsapp-glow 2s ease-in-out infinite;
+    }
+}
+
+@keyframes whatsapp-glow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgb(37 211 102 / 45%), 0 0 18px rgb(37 211 102 / 65%);
+    }
+
+    50% {
+        box-shadow: 0 0 0 12px rgb(37 211 102 / 0%), 0 0 30px rgb(37 211 102 / 85%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .whatsapp-support-button {
+        animation: none;
+    }
+}

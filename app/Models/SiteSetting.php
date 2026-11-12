@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Models;
+
+use Database\Factories\SiteSettingFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+#[Fillable(['key', 'value'])]
+class SiteSetting extends Model
+{
+    /** @use HasFactory<SiteSettingFactory> */
+    use HasFactory;
+
+    public static function enabled(string $key): bool
+    {
+        return static::query()->where('key', $key)->value('value') === '1';
+    }
+}

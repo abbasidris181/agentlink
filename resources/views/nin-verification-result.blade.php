@@ -1,0 +1,1 @@
+@include('verification-result', ['resultLabel' => 'NIN '.strtoupper($verification->version), 'backRoute' => 'nin.'.$verification->version, 'slipRoute' => 'nin.'.$verification->version.'.slip', 'downloadFormat' => 'PDF'])
