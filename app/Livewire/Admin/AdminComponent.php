@@ -12,7 +12,7 @@ abstract class AdminComponent extends Component
     {
         Gate::authorize('access-admin');
         $ability = match (static::class) {
-            Prices::class => 'prices.view', Settings::class => 'settings.view', Users::class => 'users.view', Requests::class => 'requests.view', Transactions::class => 'transactions.view', default => null,
+            Notifications::class => 'notifications.view', Prices::class => 'prices.view', Settings::class => 'settings.view', Users::class => 'users.view', Requests::class => 'requests.view', Transactions::class => 'transactions.view', default => null,
         };
         if ($ability !== null) {
             Gate::authorize($ability);

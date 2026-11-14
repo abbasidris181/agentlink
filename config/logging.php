@@ -20,6 +20,11 @@ return [
 
     'default' => env('LOG_CHANNEL', 'stack'),
 
+    'provider_responses' => [
+        'directory' => storage_path(env('APP_ENV') === 'testing' ? 'logs/testing' : 'logs'),
+        'days' => 14,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Deprecations Log Channel

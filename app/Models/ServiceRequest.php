@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\BvnLicenseOnboardingInput;
 use App\Casts\DecimalMoney;
+use App\DemographicsSearchInput;
 use App\ServiceCatalog;
 use Database\Factories\ServiceRequestFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -20,7 +21,7 @@ class ServiceRequest extends Model
     /** @use HasFactory<ServiceRequestFactory> */
     use HasFactory;
 
-    public const ADMIN_SERVICES = ['bvn-retrieval', 'delinking', 'validations', 'mod-ipe', 'ipe-clearing', 'nin-modification', 'bvn-modification', 'bvn-license-onboarding', 'complaints'];
+    public const ADMIN_SERVICES = ['bvn-retrieval', 'delinking', 'validations', 'mod-ipe', 'ipe-clearing', 'nin-modification', 'bvn-modification', 'bvn-license-onboarding', 'demographics-search', 'complaints'];
 
     public const SERVICES = [...self::ADMIN_SERVICES, 'nin-v1', 'nin-v2', 'nin-v3'];
 
@@ -78,6 +79,7 @@ class ServiceRequest extends Model
         }
 
         return match ($this->method) {
+            'search' => $input['first_name'].' '.$input['last_name'].' | '.$input['dob'],
             'enrollment' => $input['bvn'].' | '.$input['first_name'].' '.$input['last_name'],
             'demographics' => $input['first_name'].' '.$input['surname'].' | '.$input['dob'],
             'complaint' => $input['types'].' | '.$input['complaint'],
@@ -93,6 +95,7 @@ class ServiceRequest extends Model
     public static function inputColumnsFor(?string $service): array
     {
         return match ($service) {
+            'demographics-search' => DemographicsSearchInput::FIELDS,
             'bvn-license-onboarding' => BvnLicenseOnboardingInput::FIELDS,
             'nin-modification', 'bvn-modification' => ['nin' => 'NIN number', 'bvn' => 'BVN number', 'types' => 'Type', 'first_name' => 'First name', 'surname' => 'Surname', 'middle_name' => 'Middle name', 'old_first_name' => 'Old first name', 'old_surname' => 'Old surname', 'old_middle_name' => 'Old middle name', 'dob' => 'Date of birth', 'old_dob' => 'Old date of birth', 'phone' => 'New phone number', 'address' => 'Address', 'gender' => 'Gender', 'screenshot_proof' => 'Clear photo'],
             'nin-v1', 'nin-v2', 'nin-v3' => ['first_name' => 'First name', 'surname' => 'Surname', 'middle_name' => 'Middle name', 'dob' => 'Date of birth', 'gender' => 'Gender'],

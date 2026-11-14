@@ -1,4 +1,4 @@
-@if (in_array($serviceId, ['nin-v1', 'nin-v2', 'nin-v3', 'personalization', 'nin-modification', 'ipe-clearing', 'instant-ipe', 'mod-ipe', 'validations', 'delinking'], true))
+@if (in_array($serviceId, ['nin-v1', 'nin-v2', 'nin-v3', 'personalization', 'demographics-search', 'nin-modification', 'ipe-clearing', 'instant-ipe', 'mod-ipe', 'validations', 'delinking'], true))
     <img src="{{ asset('assets/images/nimc.png') }}" alt="" aria-hidden="true" width="407" height="290" class="{{ $imageClass ?? $iconClass }} rounded-lg bg-white object-contain">
 @elseif (in_array($serviceId, ['bvn-verification', 'bvn retrival', 'bvn-modification', 'bvn-license-onboarding'], true))
     <img src="{{ asset('assets/images/bvn.png') }}" alt="" aria-hidden="true" class="{{ $imageClass ?? $iconClass }} rounded-lg bg-white object-contain">

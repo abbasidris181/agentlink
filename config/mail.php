@@ -110,6 +110,9 @@ return [
     |
     */
 
+    'reply_to' => ['address' => env('MAIL_REPLY_TO_ADDRESS'), 'name' => env('MAIL_REPLY_TO_NAME')],
+    'return_path' => ['address' => env('MAIL_ENVELOPE_FROM_ADDRESS')],
+
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),

@@ -112,6 +112,7 @@ class ServiceAvailability
             'ipe.clearing' => 'ipe-clearing', 'ipe.mod' => 'mod-ipe', 'ipe.instant' => 'instant-ipe',
             'validations' => 'validations', 'delinking' => 'delinking',
             'bvn.onboarding' => 'bvn-license-onboarding',
+            'demographics.search' => 'demographics-search',
             'personalization' => 'personalization', 'nin.modification' => 'nin-modification',
             'nin.modification.form' => 'nin-modification', 'bvn.modification' => 'bvn-modification',
         ][$route] ?? null;

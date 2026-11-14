@@ -12,6 +12,7 @@
     <body class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-indigo-100 selection:text-indigo-900 dark:bg-slate-950 dark:text-slate-100">
         @switch($page)
             @case('overview') <livewire:admin.overview /> @break
+            @case('notifications') <livewire:admin.notifications :channel="$channel" /> @break
             @case('prices') <livewire:admin.prices /> @break
             @case('settings') <livewire:admin.settings /> @break
             @case('requests') <livewire:admin.requests :request-id="$requestId ?? null" :service="$service ?? null" /> @break

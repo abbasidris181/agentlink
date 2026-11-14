@@ -117,13 +117,15 @@ class PersonalizationService
                     'token' => $token, 'tracking_id' => $record->tracking_id,
                     ...($checking ? [] : ['type' => 'info']),
                 ]);
+            ProviderResponseLogger::response('personalization', $response, ['reference' => $record->reference, 'operation' => $checking ? 'check' : 'submission'], [$token]);
             $httpStatus = $response->status();
             if ($response->successful()) {
                 $body = $response->json();
             } else {
                 $transportError = 'http_error';
             }
-        } catch (ConnectionException) {
+        } catch (ConnectionException $exception) {
+            ProviderResponseLogger::failure('personalization', $exception, ['reference' => $record->reference, 'operation' => $checking ? 'check' : 'submission']);
             $transportError = 'connection_failure';
         }
 

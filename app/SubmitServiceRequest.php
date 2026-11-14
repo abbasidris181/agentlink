@@ -108,6 +108,9 @@ class SubmitServiceRequest
     /** @param array<string, string> $input */
     public function create(User $user, string $service, string $method, array $input, string $requestKey, ?UploadedFile $proof = null): ServiceRequest
     {
+        if ($service === 'demographics-search') {
+            $input = DemographicsSearchInput::validate($input);
+        }
         if ($service === 'bvn-license-onboarding') {
             $input = BvnLicenseOnboardingInput::validate($input);
         }

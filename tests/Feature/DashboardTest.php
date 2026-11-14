@@ -50,7 +50,7 @@ class DashboardTest extends TestCase
             ->assertSee('wire:key="card-bvn-verification"', false)
             ->assertSee('wire:key="card-delinking"', false);
 
-        $this->assertSame(14, preg_match_all('/wire:key="card-/', $response->getContent()));
+        $this->assertSame(15, preg_match_all('/wire:key="card-/', $response->getContent()));
     }
 
     #[TestWith(['nin-v1', 'NIN-V1'])]

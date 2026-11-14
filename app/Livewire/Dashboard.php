@@ -22,6 +22,7 @@ class Dashboard extends Component
         'nin-v1' => 'nin.v1',
         'nin-modification' => 'nin.modification',
         'personalization' => 'personalization',
+        'demographics-search' => 'demographics.search',
         'nin-v2' => 'nin.v2',
         'nin-v3' => 'nin.v3',
         'bvn-verification' => 'bvn.verify',
@@ -54,6 +55,9 @@ class Dashboard extends Component
     public bool $isPersonalization = false;
 
     #[Locked]
+    public bool $isDemographicsSearch = false;
+
+    #[Locked]
     public string $modificationStage = '';
 
     #[Locked]
@@ -80,9 +84,11 @@ class Dashboard extends Component
     #[Locked]
     public ?string $selectedServiceId = null;
 
-    public function mount(string $ninVersion = '', bool $isBvnVerification = false, string $ipeService = '', bool $isBvnRetrieval = false, bool $isNinValidation = false, bool $isDelinking = false, bool $showTransactions = false, bool $showTransfer = false, bool $isNinModification = false, string $modificationStage = '', bool $isPersonalization = false, bool $isBvnModification = false, bool $showComplaints = false, bool $isBvnLicenseOnboarding = false): void
+    public function mount(string $ninVersion = '', bool $isBvnVerification = false, string $ipeService = '', bool $isBvnRetrieval = false, bool $isNinValidation = false, bool $isDelinking = false, bool $showTransactions = false, bool $showTransfer = false, bool $isNinModification = false, string $modificationStage = '', bool $isPersonalization = false, bool $isBvnModification = false, bool $showComplaints = false, bool $isBvnLicenseOnboarding = false, bool $isDemographicsSearch = false): void
     {
         abort_unless(Auth::check(), 403);
+        abort_if($isDemographicsSearch && ($isBvnLicenseOnboarding || $showComplaints || $isBvnModification || $isPersonalization || $isNinModification || $showTransfer || $showTransactions || $ninVersion !== '' || $isBvnVerification || $isBvnRetrieval || $isNinValidation || $isDelinking || $ipeService !== ''), 404);
+        $this->isDemographicsSearch = $isDemographicsSearch;
         abort_if($isBvnLicenseOnboarding && ($showComplaints || $isBvnModification || $isPersonalization || $isNinModification || $showTransfer || $showTransactions || $ninVersion !== '' || $isBvnVerification || $isBvnRetrieval || $isNinValidation || $isDelinking || $ipeService !== ''), 404);
         $this->isBvnLicenseOnboarding = $isBvnLicenseOnboarding;
         abort_unless(in_array($ninVersion, ['', 'v1', 'v2', 'v3'], true), 404);
@@ -166,8 +172,25 @@ class Dashboard extends Component
     }
 
     #[Computed]
+    public function whatsappUrl(): ?string
+    {
+        $url = trim((string) config('services.whatsapp.url', ''));
+        if ($url !== '' && filter_var($url, FILTER_VALIDATE_URL)
+            && in_array(strtolower((string) parse_url($url, PHP_URL_SCHEME)), ['http', 'https'], true)) {
+            return $url;
+        }
+        $number = preg_replace('/\\D+/', '', (string) config('services.whatsapp.number', ''));
+
+        return preg_match('/\\A[0-9]{7,15}\\z/', $number) === 1 ? 'https://wa.me/'.$number : null;
+    }
+
+    #[Computed]
     public function pageTitle(): string
     {
+        if ($this->isDemographicsSearch) {
+            return 'Demographics Search';
+        }
+
         if ($this->isBvnLicenseOnboarding) {
             return 'BVN license onboarding';
         }

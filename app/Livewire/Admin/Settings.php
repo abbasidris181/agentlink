@@ -19,6 +19,8 @@ class Settings extends AdminComponent
 
     public string $whatsappNumber = '';
 
+    public string $whatsappUrl = '';
+
     public string $announcement = '';
 
     public bool $emailVerificationEnabled = false;
@@ -34,6 +36,7 @@ class Settings extends AdminComponent
         $this->supportEmail = $settings->get('support_email') ?? '';
         $this->supportPhone = $settings->get('support_phone') ?? '';
         $this->whatsappNumber = $settings->get('whatsapp_number') ?? (string) config('services.whatsapp.number', '');
+        $this->whatsappUrl = $settings->get('whatsapp_url') ?? '';
         $this->announcement = $settings->get('announcement') ?? '';
         $this->emailVerificationEnabled = $settings->get('email_verification_enabled') === '1';
         $this->loginDisabled = $settings->get('login_disabled') === '1';
@@ -47,11 +50,13 @@ class Settings extends AdminComponent
         $this->supportEmail = trim($this->supportEmail);
         $this->supportPhone = trim($this->supportPhone);
         $this->whatsappNumber = trim($this->whatsappNumber);
+        $this->whatsappUrl = trim($this->whatsappUrl);
         $this->announcement = trim($this->announcement);
         $this->validate([
             'siteName' => ['required', 'string', 'max:100'],
             'supportEmail' => ['nullable', 'email', 'max:255'],
             'supportPhone' => ['nullable', 'string', 'max:30', 'regex:/\A[+0-9 ()-]+\z/'],
+            'whatsappUrl' => ['nullable', 'string', 'max:2048', 'url:http,https'],
             'whatsappNumber' => ['nullable', 'string', 'max:25', 'regex:/\A\+?[0-9]{7,15}\z/'],
             'announcement' => ['nullable', 'string', 'max:2000'],
             'emailVerificationEnabled' => ['boolean'],
@@ -63,6 +68,7 @@ class Settings extends AdminComponent
             $settings = [
                 'site_name' => $this->siteName, 'support_email' => $this->supportEmail,
                 'support_phone' => $this->supportPhone, 'whatsapp_number' => $this->whatsappNumber,
+                'whatsapp_url' => $this->whatsappUrl,
                 'announcement' => $this->announcement,
                 'email_verification_enabled' => $this->emailVerificationEnabled ? '1' : '0',
                 'login_disabled' => $this->loginDisabled ? '1' : '0',
@@ -76,7 +82,7 @@ class Settings extends AdminComponent
             AdminAudit::create(['actor_id' => Auth::id(), 'event' => 'settings.updated', 'details' => ['keys' => array_keys($settings)]]);
         });
 
-        config(['app.name' => $this->siteName, 'site.announcement' => $this->announcement, 'services.whatsapp.number' => $this->whatsappNumber]);
+        config(['app.name' => $this->siteName, 'site.announcement' => $this->announcement, 'services.whatsapp.number' => $this->whatsappNumber, 'services.whatsapp.url' => $this->whatsappUrl]);
         session()->flash('status', 'Site settings saved.');
     }
 

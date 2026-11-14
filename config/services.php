@@ -1,6 +1,12 @@
 <?php
 
 return [
+    'parrotica' => [
+        'url' => env('PAR_URL', 'https://api.parrotica.com'),
+        'user_id' => env('PAR_ID'),
+        'sender_id' => env('PAR_SENDER_ID'),
+        'api_key' => env('PAR_TOKEN'),
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -24,6 +30,8 @@ return [
 
     'whatsapp' => [
         'number' => env('WHATSAPP_NUMBER', ''),
+        'send_url' => env('WA_SEND_URL'),
+        'send_token' => env('WA_SEND_TOKEN'),
     ],
 
     'ses' => [

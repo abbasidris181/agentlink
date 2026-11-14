@@ -61,7 +61,7 @@
                             <span>{{ $service['name'] }}<span class="mt-1 block text-xs text-red-400">Temporarily unavailable</span></span>
                         </a>
                     @elseif (isset($this->verificationRoutes[$serviceId]))
-                    <a wire:key="nav-{{ $serviceId }}" href="{{ route($this->verificationRoutes[$serviceId]) }}" x-on:click="sidebarOpen = false" @if ($serviceId === 'nin-'.$ninVersion || ($isBvnVerification && $serviceId === 'bvn-verification') || $serviceId === $ipeService || ($isBvnRetrieval && $serviceId === 'bvn retrival') || ($isNinValidation && $serviceId === 'validations') || ($isDelinking && $serviceId === 'delinking') || ($isNinModification && $serviceId === 'nin-modification') || ($isPersonalization && $serviceId === 'personalization') || ($isBvnModification && $serviceId === 'bvn-modification') || ($isBvnLicenseOnboarding && $serviceId === 'bvn-license-onboarding')) aria-current="page" @endif class="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm font-medium text-sidebar-muted transition hover:bg-white/5 hover:text-white focus-visible:outline-2 focus-visible:outline-indigo-500 dark:text-sidebar-muted dark:hover:bg-white/5 dark:hover:text-white">
+                    <a wire:key="nav-{{ $serviceId }}" href="{{ route($this->verificationRoutes[$serviceId]) }}" x-on:click="sidebarOpen = false" @if ($serviceId === 'nin-'.$ninVersion || ($isBvnVerification && $serviceId === 'bvn-verification') || $serviceId === $ipeService || ($isBvnRetrieval && $serviceId === 'bvn retrival') || ($isNinValidation && $serviceId === 'validations') || ($isDelinking && $serviceId === 'delinking') || ($isNinModification && $serviceId === 'nin-modification') || ($isPersonalization && $serviceId === 'personalization') || ($isBvnModification && $serviceId === 'bvn-modification') || ($isBvnLicenseOnboarding && $serviceId === 'bvn-license-onboarding') || ($isDemographicsSearch && $serviceId === 'demographics-search')) aria-current="page" @endif class="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm font-medium text-sidebar-muted transition hover:bg-white/5 hover:text-white focus-visible:outline-2 focus-visible:outline-indigo-500 dark:text-sidebar-muted dark:hover:bg-white/5 dark:hover:text-white">
                         <span class="flex size-7 shrink-0 items-center justify-center rounded-lg bg-white/5 text-sidebar-muted dark:bg-white/5 dark:text-sidebar-muted" aria-hidden="true">
                             @include('livewire.service-icon', ['serviceId' => $serviceId, 'iconClass' => 'size-3.5', 'imageClass' => 'size-6'])
                         </span>
@@ -110,6 +110,8 @@
             @include('livewire.service-unavailable')
             @if ($showComplaints)
                 <livewire:complaints />
+            @elseif ($isDemographicsSearch)
+                <livewire:demographics-search />
             @elseif ($isBvnLicenseOnboarding)
                 <livewire:bvn-license-onboarding />
             @elseif ($isBvnModification)
@@ -225,29 +227,29 @@
                     </div>
 
                 </div>
-                <div class="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3" aria-live="polite" aria-label="Service results">
+                <div class="grid grid-cols-3 gap-2 sm:gap-3 lg:grid-cols-4" aria-live="polite" aria-label="Service results">
                     @foreach ($this->services as $serviceId => $service)
                         <article wire:key="card-{{ $serviceId }}" @class([
-                            'group relative flex aspect-square min-w-0 flex-col items-center gap-2 overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-2.5 text-center shadow-sm transition duration-200 motion-reduce:transform-none sm:gap-4 sm:p-5 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20',
+                            'group relative flex min-h-32 min-w-0 flex-col items-center gap-2 overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-2 text-center shadow-sm transition duration-200 motion-reduce:transform-none sm:min-h-40 sm:gap-3 sm:p-3 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20',
                             'hover:-translate-y-1 hover:border-indigo-300 hover:shadow-xl dark:hover:border-indigo-500/40',
                         ])>
-                            <span class="relative flex min-h-0 w-full flex-1 items-center justify-center text-indigo-600 dark:text-indigo-300" aria-hidden="true">
-                                @include('livewire.service-icon', ['serviceId' => $serviceId, 'iconClass' => 'size-4 sm:size-5', 'imageClass' => 'absolute inset-0 m-auto h-[85%] w-[85%] rounded-2xl object-center'])
+                            <span class="relative flex h-10 w-full shrink-0 items-center justify-center text-indigo-600 sm:h-14 dark:text-indigo-300" aria-hidden="true">
+                                @include('livewire.service-icon', ['serviceId' => $serviceId, 'iconClass' => 'size-4 sm:size-5', 'imageClass' => 'h-full w-full max-w-16 rounded-lg object-center sm:max-w-20'])
                             </span>
-                            <div class="flex w-full shrink-0 flex-col items-center gap-1 pb-1 sm:gap-2 sm:pb-0">
-                                <h3 class="max-w-full break-words text-xl font-bold leading-7 tracking-tight sm:text-2xl sm:leading-8">{{ $service['name'] }}</h3>
-                                <span class="inline-flex items-center justify-center gap-1.5 text-xs font-medium text-slate-500 transition group-hover:text-indigo-600 sm:text-xs dark:text-muted-light dark:group-hover:text-indigo-300">
-                                    {{ isset($this->unavailableServices[$serviceId]) ? 'Temporarily unavailable' : (isset($this->verificationRoutes[$serviceId]) ? 'Open service' : 'Coming soon') }}
-                                    <svg class="size-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14m-5-5 5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <div class="flex w-full flex-1 flex-col items-center justify-center gap-1">
+                                <h3 class="min-h-8 w-full break-words text-xs font-bold leading-tight tracking-tight sm:min-h-10 sm:text-sm">{{ $service['name'] }}</h3>
+                                <span class="inline-flex items-center justify-center gap-1 text-[9px] font-medium leading-tight text-slate-500 transition group-hover:text-indigo-600 sm:text-[10px] dark:text-muted-light dark:group-hover:text-indigo-300">
+                                    {{ isset($this->unavailableServices[$serviceId]) ? 'View history' : (isset($this->verificationRoutes[$serviceId]) ? 'Open service' : 'Coming soon') }}
+                                    <svg class="hidden size-3 shrink-0 sm:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14m-5-5 5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </span>
                             </div>
                             @if (isset($this->unavailableServices[$serviceId]))
-                                <span class="absolute right-2 top-2 rounded-full bg-red-50 px-2 py-1 text-xs font-medium text-red-700 dark:bg-red-950 dark:text-red-300">Temporarily unavailable</span>
+                                <span title="Temporarily unavailable" class="absolute right-1 top-1 rounded-full bg-red-50 px-1.5 py-0.5 text-[8px] font-semibold text-red-700 sm:right-2 sm:top-2 sm:text-[10px] dark:bg-red-950 dark:text-red-300">Unavailable</span>
                             @endif
                             @if (isset($this->verificationRoutes[$serviceId]))
-                                <a href="{{ route($this->verificationRoutes[$serviceId]) }}" aria-label="View {{ $service['name'] }}" class="absolute inset-0 rounded-3xl focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-indigo-500"></a>
+                                <a href="{{ route($this->verificationRoutes[$serviceId]) }}" aria-label="View {{ $service['name'] }}" class="absolute inset-0 rounded-2xl focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-indigo-500"></a>
                             @else
-                                <button wire:click="selectService('{{ $serviceId }}')" type="button" aria-label="View {{ $service['name'] }}" class="absolute inset-0 rounded-3xl focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-indigo-500"></button>
+                                <button wire:click="selectService('{{ $serviceId }}')" type="button" aria-label="View {{ $service['name'] }}" class="absolute inset-0 rounded-2xl focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-indigo-500"></button>
                             @endif
                         </article>
                     @endforeach
@@ -259,39 +261,12 @@
         </main>
     </div>
 
-    <div x-data="{ chatOpen: false }" x-on:keydown.escape.window="chatOpen = false" x-on:click.outside="chatOpen = false" class="fixed bottom-6 left-6 z-30 lg:left-80">
-        <section id="whatsapp-support-panel" x-cloak x-show="chatOpen" x-transition.opacity aria-label="WhatsApp support" class="mb-4 w-80 max-w-[calc(100vw-3rem)] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-400/40 dark:border-slate-700 dark:bg-surface-dark dark:shadow-black/50">
-            <div class="flex items-center justify-between gap-3 bg-emerald-600 px-5 py-4 text-white">
-                <div class="min-w-0">
-                    <p class="truncate text-sm font-bold">{{ config('app.name') }} support</p>
-                    <p class="mt-0.5 text-xs text-emerald-100">Let's chat on WhatsApp</p>
-                </div>
-                <button type="button" x-on:click="chatOpen = false" aria-label="Close WhatsApp support" class="rounded-lg p-1.5 transition hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-white">
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" stroke-linecap="round"/></svg>
-                </button>
-            </div>
-            <div class="p-5">
-                <p class="text-sm font-semibold">How can we help?</p>
-                <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-muted-light">Start a conversation with our support team on WhatsApp.</p>
-                @if (config('site.support_email'))<p class="mt-3 break-all text-xs text-slate-500 dark:text-muted-light">Email: {{ config('site.support_email') }}</p>@endif
-                @if (config('site.support_phone'))<p class="mt-2 text-xs text-slate-500 dark:text-muted-light">Phone: {{ config('site.support_phone') }}</p>@endif
-                @php
-                    $whatsappNumber = preg_replace('/\D+/', '', (string) config('services.whatsapp.number'));
-                @endphp
-                @if ($whatsappNumber !== '')
-                    <a href="https://wa.me/{{ $whatsappNumber }}" target="_blank" rel="noopener noreferrer" class="mt-5 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500">
-                        Chat on WhatsApp <span class="sr-only">(opens in a new tab)</span>
-                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </a>
-                @else
-                    <p class="mt-4 rounded-xl bg-slate-50 p-3 text-xs leading-5 text-slate-500 dark:bg-slate-800 dark:text-muted-light">WhatsApp support will be available soon.</p>
-                @endif
-            </div>
-        </section>
-        <button type="button" x-on:click="chatOpen = !chatOpen" x-bind:aria-expanded="chatOpen" aria-controls="whatsapp-support-panel" aria-label="Open WhatsApp support" class="flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl shadow-emerald-900/25 transition hover:scale-105 hover:bg-emerald-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-500 motion-reduce:transform-none">
+    @if ($this->whatsappUrl !== null)
+        <a id="whatsapp-support-link" href="{{ $this->whatsappUrl }}" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" class="whatsapp-support-button fixed bottom-6 left-6 z-30 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white transition hover:scale-105 hover:bg-emerald-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-500 motion-reduce:transform-none lg:left-80">
             <svg class="size-8" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16.04 3a12.87 12.87 0 0 0-11.1 19.4L3.1 29l6.77-1.78A12.94 12.94 0 1 0 16.04 3Zm0 23.57a10.7 10.7 0 0 1-5.46-1.5l-.4-.24-4.02 1.06 1.07-3.91-.26-.42a10.75 10.75 0 1 1 9.07 5.01Zm5.9-8.02c-.32-.16-1.9-.94-2.2-1.05-.3-.1-.51-.16-.73.16-.21.32-.83 1.05-1.02 1.27-.19.21-.38.24-.7.08-.32-.16-1.36-.5-2.58-1.6-.96-.85-1.6-1.9-1.79-2.22-.19-.32-.02-.5.14-.66.14-.14.32-.38.48-.56.16-.19.21-.32.32-.54.1-.21.05-.4-.03-.56-.08-.16-.72-1.75-.99-2.4-.26-.63-.53-.54-.73-.55h-.62c-.21 0-.56.08-.86.4-.3.33-1.12 1.1-1.12 2.67s1.15 3.1 1.31 3.31c.16.22 2.26 3.46 5.48 4.85.77.33 1.37.53 1.84.68.77.24 1.47.2 2.02.12.62-.1 1.9-.78 2.17-1.53.27-.75.27-1.39.19-1.52-.08-.14-.3-.22-.62-.38Z"/></svg>
-        </button>
-    </div>
+            <span class="sr-only">Opens WhatsApp in a new tab</span>
+        </a>
+    @endif
 
     @if ($this->selectedService)
         <dialog wire:key="service-dialog-{{ $selectedServiceId }}" x-data x-init="$el.showModal()" x-on:cancel.prevent="$wire.closeService()" wire:click.self="closeService" aria-labelledby="service-dialog-title" aria-describedby="service-dialog-description" class="fixed inset-0 m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-slate-900 shadow-2xl backdrop:bg-slate-950/50 backdrop:backdrop-blur-sm dark:border-slate-700 dark:bg-surface-dark dark:text-slate-100">

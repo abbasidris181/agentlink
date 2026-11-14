@@ -15,7 +15,6 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -232,13 +231,12 @@ class InstantIpeService
             $response = Http::asJson()->acceptJson()->withoutRedirecting()->connectTimeout(5)->timeout(25)
                 ->post(rtrim(config('services.tracking_id.tracking_url'), '/').'/api/'.$endpoint, ['token' => config('services.tracking_id.tracking_token'), 'tracking_id' => $trackingId]);
         } catch (ConnectionException|ValidationException $exception) {
-            Log::channel('instant_ipe')->warning('Provider request could not complete.', ['request_id' => $requestId, 'endpoint' => $endpoint, 'error_type' => $exception::class]);
+            ProviderResponseLogger::failure('instant-ipe', $exception, ['request_id' => $requestId, 'endpoint' => $endpoint]);
 
             return $unknown;
         }
         $token = config('services.tracking_id.tracking_token');
-        $bodyForLog = str_replace([$token, trim(json_encode($token), '"')], '[REDACTED]', $response->body());
-        Log::channel('instant_ipe')->info('Provider response received.', ['request_id' => $requestId, 'endpoint' => $endpoint, 'http_status' => $response->status(), 'response' => $bodyForLog]);
+        ProviderResponseLogger::response('instant-ipe', $response, ['request_id' => $requestId, 'endpoint' => $endpoint], [$token]);
 
         if (! $response->successful()) {
             return $unknown;

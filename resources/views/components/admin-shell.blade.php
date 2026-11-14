@@ -64,17 +64,20 @@
                     </div>
                 </details>
             @endcan
-            <details class="group">
+            @can('notifications.view')
+            <details class="group" @if ($section === 'notifications') open @endif>
                 <summary class="flex cursor-pointer list-none items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-semibold text-sidebar-muted transition hover:bg-white/5 hover:text-white [&::-webkit-details-marker]:hidden">
                     <svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     <span class="flex-1">NOTIFICATION</span>
                     <svg class="size-4 transition-transform group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </summary>
                 <div class="mt-2 ml-6 flex flex-col gap-1 border-l border-white/15 pl-3">
-                    <button type="button" disabled title="Email notifications coming soon" class="cursor-not-allowed rounded-xl px-4 py-3 text-left text-sm font-semibold text-sidebar-muted opacity-60">Email</button>
-                    <button type="button" disabled title="Phone notifications coming soon" class="cursor-not-allowed rounded-xl px-4 py-3 text-left text-sm font-semibold text-sidebar-muted opacity-60">Phone</button>
+                    @foreach (['email' => 'Email', 'phone' => 'Phone', 'whatsapp' => 'WhatsApp'] as $notificationChannel => $label)
+                        <a href="{{ route('admin.notifications', ['channel' => $notificationChannel]) }}" @if (request()->is('admin/notifications/'.$notificationChannel)) aria-current="page" @endif class="rounded-xl px-4 py-3 text-sm font-semibold text-sidebar-muted hover:bg-white/5 hover:text-white">{{ $label }}</a>
+                    @endforeach
                 </div>
             </details>
+            @endcan
         </nav>
         <div class="flex flex-col gap-2 border-t border-white/10 p-4 dark:border-white/10">
             @can('wallet.transfer')<a href="{{ route('wallet.transfer') }}" class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-sidebar-muted hover:bg-white/5 hover:text-white dark:text-sidebar-muted dark:hover:bg-white/5 dark:hover:text-white"><svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Transfer from wallet</span></a>@endcan

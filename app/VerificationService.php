@@ -95,6 +95,7 @@ class VerificationService
         try {
             $response = Http::withToken($token)->asJson()->acceptJson()->withoutRedirecting()->connectTimeout(5)->timeout(30)
                 ->post(rtrim($url, '/').$endpoint, ['idNumber' => $identifier, 'type' => $providerType, 'consent' => true]);
+            ProviderResponseLogger::response($service, $response, ['reference' => $record->reference, 'method' => $method, 'endpoint' => $endpoint], [$token]);
             $body = $response->json();
             $message = is_array($body) ? ($body['message'] ?? null) : null;
             if ($response->successful() && is_array($body) && ($body['status'] ?? null) === true && is_array($message)
@@ -112,7 +113,8 @@ class VerificationService
                 return $record;
             }
             $chargeError = $record->charge_errors && $this->isChargeableError($response, $body);
-        } catch (ConnectionException) {
+        } catch (ConnectionException $exception) {
+            ProviderResponseLogger::failure($service, $exception, ['reference' => $record->reference, 'method' => $method, 'endpoint' => $endpoint]);
         }
 
         return DB::transaction(function () use ($record, $chargeError, $recordClass, $label): VerificationRecord {

@@ -29,6 +29,7 @@ Route::get('/email/verify/{id}/{hash}', VerifyEmailController::class)->middlewar
 Route::middleware([EnsureSignupEmailIsVerified::class, EnsureServiceIsAvailable::class])->group(function (): void {
     Route::view('/dashboard', 'dashboard')->middleware('auth')->name('dashboard');
 
+    Route::view('/demographics/search', 'demographics-search')->middleware('auth')->name('demographics.search');
     Route::view('/personalization', 'personalization')->middleware('auth')->name('personalization');
     Route::get('/personalization/{personalization:reference}/slips/{slip}', PersonalizationSlipController::class)->middleware('auth')->whereIn('slip', array_keys(NinVerificationRecord::SLIPS))->name('personalization.slip');
     Route::post('/personalization/{personalization:reference}/slips/{slip}', PersonalizationSlipController::class)->middleware('auth')->whereIn('slip', array_keys(NinVerificationRecord::SLIPS))->name('personalization.slip.purchase');
@@ -77,6 +78,7 @@ Route::middleware([EnsureSignupEmailIsVerified::class, EnsureServiceIsAvailable:
         Route::view('/requests/service/{service}', 'admin', ['page' => 'requests', 'title' => 'Service requests'])->whereIn('service', ServiceRequest::ADMIN_SERVICES)->middleware('can:requests.view')->name('requests.service');
         Route::view('/requests/{requestId}', 'admin', ['page' => 'requests', 'title' => 'Manage service request'])->whereNumber('requestId')->middleware('can:requests.view')->name('requests.show');
         Route::view('/transactions/{transactionGroup?}', 'admin', ['page' => 'transactions', 'title' => 'Transactions'])->whereIn('transactionGroup', array_keys(Transactions::GROUPS))->middleware('can:transactions.view')->name('transactions');
+        Route::view('/notifications/{channel}', 'admin', ['page' => 'notifications', 'title' => 'Notifications'])->whereIn('channel', ['email', 'phone', 'whatsapp'])->middleware('can:notifications.view')->name('notifications');
         Route::view('/prices', 'admin', ['page' => 'prices', 'title' => 'Service prices'])->middleware('can:prices.view')->name('prices');
         Route::view('/settings', 'admin', ['page' => 'settings', 'title' => 'Site settings'])->middleware('can:settings.view')->name('settings');
         Route::view('/users', 'admin', ['page' => 'users', 'title' => 'User management'])->middleware('can:users.view')->name('users');

@@ -27,7 +27,7 @@ class ComplaintsTest extends TestCase
             ->assertSee('Complains')->assertSee('Complain')->assertSee('Other')->assertSee('Submit complaint')
             ->assertDontSee('Explore services');
         $component = Livewire::test(Complaints::class);
-        $this->assertSame(15, substr_count($component->html(), 'type="checkbox"'));
+        $this->assertSame(16, substr_count($component->html(), 'type="checkbox"'));
         foreach (ServiceCatalog::dashboardServices() as $service) {
             $component->assertSee($service['name']);
         }

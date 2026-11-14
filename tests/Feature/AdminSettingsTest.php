@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use App\Livewire\Admin\Settings;
+use App\Models\SiteSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\TestWith;
 use Tests\TestCase;
 
 class AdminSettingsTest extends TestCase
@@ -23,9 +25,73 @@ class AdminSettingsTest extends TestCase
 
         $this->assertDatabaseHas('site_settings', ['key' => 'site_name', 'value' => 'Configured Portal']);
         $this->assertDatabaseHas('admin_audits', ['event' => 'settings.updated']);
+        $this->assertDatabaseHas('site_settings', ['key' => 'support_email', 'value' => 'support@example.com']);
         $this->get(route('dashboard'))->assertOk()->assertSee('Configured Portal')
-            ->assertSee('Service notice for customers.')->assertSee('support@example.com')
+            ->assertSee('Service notice for customers.')
             ->assertSee('https://wa.me/2348012345678', false);
+    }
+
+    #[TestWith(['https://wa.me/2348098765432?text=Hello%20support'])]
+    #[TestWith(['https://chat.whatsapp.com/ExampleInviteCode'])]
+    #[TestWith(['https://wa.link/example'])]
+    public function test_whatsapp_widget_opens_the_saved_link_directly_without_a_popup(string $url): void
+    {
+        $this->actingAs(User::factory()->administrator()->create());
+        Livewire::test(Settings::class)->set('whatsappUrl', $url)->set('whatsappNumber', '2348012345678')
+            ->call('save')->assertHasNoErrors();
+        $this->assertDatabaseHas('site_settings', ['key' => 'whatsapp_url', 'value' => $url]);
+        Livewire::test(Settings::class)->assertSet('whatsappUrl', $url);
+        $this->get(route('dashboard'))->assertOk()
+            ->assertSee('id="whatsapp-support-link" href="'.e($url).'"', false)
+            ->assertSee('target="_blank" rel="noopener noreferrer"', false)
+            ->assertSee('whatsapp-support-button')
+            ->assertDontSee('whatsapp-support-panel')->assertDontSee('chatOpen')
+            ->assertDontSee('href="https://wa.me/2348012345678"', false);
+    }
+
+    #[TestWith(['javascript:alert(1)'])]
+    #[TestWith(['data:text/html,<script>alert(1)</script>'])]
+    #[TestWith(['ftp://example.com'])]
+    #[TestWith(['not-a-url'])]
+    public function test_whatsapp_link_rejects_non_web_urls(string $url): void
+    {
+        $this->actingAs(User::factory()->administrator()->create());
+        Livewire::test(Settings::class)->set('whatsappUrl', $url)->call('save')->assertHasErrors('whatsappUrl');
+        $this->assertDatabaseCount('site_settings', 0);
+    }
+
+    public function test_saved_number_is_used_when_the_link_is_empty(): void
+    {
+        SiteSetting::create(['key' => 'whatsapp_number', 'value' => '+2348012345678']);
+        SiteSetting::create(['key' => 'whatsapp_url', 'value' => '']);
+        $this->actingAs(User::factory()->create());
+        $this->get(route('dashboard'))->assertOk()->assertSee('id="whatsapp-support-link" href="https://wa.me/2348012345678"', false)
+            ->assertDontSee('whatsapp-support-panel');
+    }
+
+    public function test_unconfigured_whatsapp_widget_is_hidden(): void
+    {
+        SiteSetting::create(['key' => 'whatsapp_number', 'value' => '']);
+        SiteSetting::create(['key' => 'whatsapp_url', 'value' => '']);
+        $this->actingAs(User::factory()->create());
+        $this->get(route('dashboard'))->assertOk()->assertDontSee('id="whatsapp-support-link"', false)
+            ->assertDontSee('whatsapp-support-panel');
+    }
+
+    public function test_invalid_stored_link_cannot_inject_a_script_into_the_widget(): void
+    {
+        SiteSetting::create(['key' => 'whatsapp_url', 'value' => 'javascript:alert(1)']);
+        SiteSetting::create(['key' => 'whatsapp_number', 'value' => '2348012345678']);
+        $this->actingAs(User::factory()->create());
+        $this->get(route('dashboard'))->assertOk()->assertSee('href="https://wa.me/2348012345678"', false)
+            ->assertDontSee('javascript:alert(1)', false);
+    }
+
+    public function test_settings_viewer_cannot_change_the_whatsapp_destination(): void
+    {
+        $this->actingAs(User::factory()->staff(['settings.view'])->create());
+        Livewire::test(Settings::class)->set('whatsappUrl', 'https://wa.me/2348098765432')->call('save')->assertForbidden();
+        $this->assertDatabaseCount('site_settings', 0);
     }
 
     public function test_invalid_settings_are_rejected_before_writing_any_values(): void

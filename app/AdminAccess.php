@@ -13,6 +13,7 @@ class AdminAccess
     {
         return ['transactions.view' => 'View all transactions', 'dashboard.view' => 'Dashboard overview', 'prices.view' => 'View prices', 'prices.edit' => 'Edit prices',
             'settings.view' => 'View site settings', 'settings.edit' => 'Edit site settings',
+            'notifications.view' => 'View notification recipients', 'notifications.send' => 'Send notifications', 'notifications.configure' => 'Configure notification providers',
             'users.view' => 'View user directory', 'users.contact' => 'View contact and profile fields',
             'users.balances' => 'View balances', 'users.transactions' => 'View latest 20 transactions',
             'users.activity' => 'View account activity', 'users.edit' => 'Edit customer profiles',
@@ -28,7 +29,7 @@ class AdminAccess
     {
         foreach ($permissions as $permission) {
             $section = explode('.', $permission)[0];
-            if (in_array($section, ['prices', 'settings', 'users', 'requests'], true)) {
+            if (in_array($section, ['prices', 'settings', 'users', 'requests', 'notifications'], true)) {
                 $permissions[] = $section.'.view';
             }
             if ($permission === 'users.edit') {

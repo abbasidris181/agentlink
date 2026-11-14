@@ -1,3 +1,8 @@
+<div class="flex shrink-0 items-center gap-1 sm:gap-3">
+    <div class="rounded-xl bg-indigo-50 px-2.5 py-2 text-right dark:bg-indigo-500/10">
+        <span class="block text-[10px] font-medium text-slate-500 dark:text-slate-400">Wallet balance</span>
+        <span class="block whitespace-nowrap text-xs font-bold tabular-nums text-indigo-700 sm:text-sm dark:text-indigo-300">₦{{ \App\Money::format($walletBalance ?? auth()->user()->wallet_balance) }}</span>
+    </div>
 <div x-data="{ accountOpen: false, theme: window.appTheme.preference }" x-on:app-theme-changed.window="theme = $event.detail" x-on:click.outside="accountOpen = false" x-on:keydown.escape="if (accountOpen) { $event.stopPropagation(); $event.preventDefault(); accountOpen = false; $refs.accountTrigger.focus(); }" class="relative min-w-0">
     <button x-ref="accountTrigger" type="button" x-on:click="accountOpen = !accountOpen" x-bind:aria-expanded="accountOpen" aria-controls="account-dropdown" aria-label="Open account options" class="flex min-w-0 items-center gap-3 rounded-xl p-2 text-left transition hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-indigo-500 dark:hover:bg-slate-800">
         <span class="hidden min-w-0 text-right sm:block">
@@ -64,4 +69,6 @@
             <button type="submit" autofocus class="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Close profile</button>
         </form>
     </dialog>
+</div>
+
 </div>
