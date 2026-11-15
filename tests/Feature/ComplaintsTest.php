@@ -48,7 +48,7 @@ class ComplaintsTest extends TestCase
         $this->assertSame('Please help with my service request.', $record->payload['complaint']);
         $this->assertSame($user->id, $record->user_id);
         $this->assertSame(0, $record->quoted_price);
-        $this->assertStringNotContainsString('Please help', $record->getRawOriginal('payload'));
+        $this->assertStringContainsString('Please help', $record->getRawOriginal('payload'));
         $this->assertSame(100000, $user->fresh()->wallet_balance);
         $component->call('submit')->assertHasNoErrors()->assertSet('submittedReference', $record->reference);
         $this->assertDatabaseCount('service_requests', 1);

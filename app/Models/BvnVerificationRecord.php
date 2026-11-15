@@ -23,7 +23,7 @@ class BvnVerificationRecord extends VerificationRecord
 
     protected function casts(): array
     {
-        return ['bvn' => 'encrypted', 'result' => 'encrypted:array', 'price' => DecimalMoney::class, 'charge_errors' => 'boolean'];
+        return ['result' => 'array', 'price' => DecimalMoney::class, 'charge_errors' => 'boolean'];
     }
 
     public function user(): BelongsTo

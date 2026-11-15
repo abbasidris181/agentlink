@@ -29,7 +29,7 @@ class ServiceRequest extends Model
 
     protected function casts(): array
     {
-        return ['payload' => 'encrypted:array', 'reply' => 'encrypted', 'quoted_price' => DecimalMoney::class, 'handled_at' => 'datetime', 'revision' => 'integer'];
+        return ['payload' => 'array', 'quoted_price' => DecimalMoney::class, 'handled_at' => 'datetime', 'revision' => 'integer'];
     }
 
     public function walletTransaction(): HasOne

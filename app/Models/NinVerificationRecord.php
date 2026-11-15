@@ -27,7 +27,7 @@ class NinVerificationRecord extends VerificationRecord
 
     protected function casts(): array
     {
-        return ['nin' => 'encrypted', 'phone' => 'encrypted', 'result' => 'encrypted:array', 'price' => DecimalMoney::class, 'charge_errors' => 'boolean'];
+        return ['result' => 'array', 'price' => DecimalMoney::class, 'charge_errors' => 'boolean'];
     }
 
     public function user(): BelongsTo

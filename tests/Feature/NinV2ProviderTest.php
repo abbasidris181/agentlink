@@ -44,8 +44,8 @@ class NinV2ProviderTest extends TestCase
         $this->assertSame($this->providerResponse()['message'], $record->result);
         $this->assertSame(80000, $user->fresh()->wallet_balance);
         $this->assertDatabaseHas('wallet_transactions', ['id' => $record->wallet_transaction_id, 'service' => 'NIN V2', 'amount' => '200.00']);
-        $this->assertStringNotContainsString('01234567890', $record->getRawOriginal('nin'));
-        $this->assertStringNotContainsString('Taylor', $record->getRawOriginal('result'));
+        $this->assertStringContainsString('01234567890', $record->getRawOriginal('nin'));
+        $this->assertStringContainsString('Taylor', $record->getRawOriginal('result'));
         $component->call('verify')->assertHasNoErrors();
         $this->assertDatabaseCount('nin_verification_records', 1);
         $this->assertDatabaseCount('wallet_transactions', 1);

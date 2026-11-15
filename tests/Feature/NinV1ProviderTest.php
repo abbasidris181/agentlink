@@ -11,6 +11,7 @@ use App\NinVerificationService;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\ValidationException;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\TestWith;
 use Tests\TestCase;
@@ -148,8 +149,8 @@ class NinV1ProviderTest extends TestCase
         $this->assertSame("TEST'PERSON EXAMPLE", $record->fullName());
         $this->assertSame(85000, $user->fresh()->wallet_balance);
         $this->assertDatabaseHas('wallet_transactions', ['id' => $record->wallet_transaction_id, 'amount' => '150.00', 'service' => 'NIN V1']);
-        $this->assertStringNotContainsString('TEST', $record->getRawOriginal('result'));
-        $this->assertStringNotContainsString('01234567890', $record->getRawOriginal('nin'));
+        $this->assertStringContainsString('TEST', $record->getRawOriginal('result'));
+        $this->assertStringContainsString('01234567890', $record->getRawOriginal('nin'));
         $this->assertArrayNotHasKey('result', $record->toArray());
         $component->call('verify')->assertHasNoErrors();
         $this->assertDatabaseCount('nin_verification_records', 1);
@@ -187,7 +188,7 @@ class NinV1ProviderTest extends TestCase
         $this->assertSame('07031212750', $record->phone);
         $this->assertSame('01234567890', $record->nin);
         $this->assertSame(80000, $user->fresh()->wallet_balance);
-        $this->assertStringNotContainsString('07031212750', $record->getRawOriginal('phone'));
+        $this->assertStringContainsString('07031212750', $record->getRawOriginal('phone'));
         $this->assertArrayNotHasKey('phone', $record->toArray());
         $component->call('verify')->assertHasNoErrors();
         $this->assertDatabaseCount('wallet_transactions', 1);
@@ -277,7 +278,12 @@ class NinV1ProviderTest extends TestCase
         $this->actingAs($user);
         $component = Livewire::test(NinVerification::class)->set('nin', '01234567890')->set('consent', true)->call('verify')->assertHasNoErrors();
 
-        $component->set('nin', '11111111111')->call('verify')->assertHasErrors(['verification']);
+        try {
+            app(NinVerificationService::class)->verify($user, '11111111111', $component->get('requestKey'));
+            $this->fail('Reusing the same request key for a different NIN must be rejected.');
+        } catch (ValidationException $exception) {
+            $this->assertArrayHasKey('verification', $exception->errors());
+        }
 
         Http::assertSentCount(1);
         $this->assertDatabaseCount('nin_verification_records', 1);

@@ -128,7 +128,7 @@ class AdminNotificationsTest extends TestCase
         $this->assertCount(0, $transport->messages());
         $send = AdminNotificationSend::query()->firstOrFail();
         $this->assertCount(6, $send->recipients);
-        $this->assertStringNotContainsString('plain text', $send->getRawOriginal('payload'));
+        $this->assertStringContainsString('plain text', $send->getRawOriginal('payload'));
         $component->call('sendNextBatch')->assertStatus(409);
         $component = Livewire::test(Notifications::class)->set('selected', $ids)->set('subject', 'News')->set('message', "Hello\n<script>plain text</script>")
             ->call('prepare')->call('confirmSending')->call('sendNextBatch')->assertSet('selected', [(string) $users[5]->id]);
@@ -297,7 +297,7 @@ class AdminNotificationsTest extends TestCase
         $this->assertCount(0, $transport->messages());
     }
 
-    public function test_configuration_is_validated_encrypted_and_never_hydrates_the_api_key(): void
+    public function test_configuration_is_plain_json_validated_and_never_hydrates_the_api_key(): void
     {
         $this->actingAs(User::factory()->administrator()->create());
         $component = Livewire::test(Notifications::class, ['channel' => 'phone'])->assertSet('providerApiKey', '')
@@ -306,7 +306,7 @@ class AdminNotificationsTest extends TestCase
             ->set('providerSenderId', '1234567890123456')->set('providerApiKey', 'new-test-secret')->call('saveProvider')->assertHasNoErrors()
             ->assertSet('providerApiKey', '');
         $raw = SiteSetting::query()->where('key', 'notification_parrotica')->value('value');
-        $this->assertStringNotContainsString('new-test-secret', $raw);
+        $this->assertSame('new-test-secret', json_decode($raw, true)['api_key']);
         $this->assertSame('new-test-secret', ParroticaSettings::get()['api_key']);
         Livewire::test(Notifications::class, ['channel' => 'phone'])->assertSet('providerApiKey', '')
             ->set('providerSenderId', 'APPROVED')->call('saveProvider')->assertHasNoErrors();
@@ -352,7 +352,7 @@ class AdminNotificationsTest extends TestCase
             ->call('prepare')->assertHasNoErrors()->assertSee('Confirm WhatsApp notification');
         Http::assertNothingSent();
         $send = AdminNotificationSend::query()->firstOrFail();
-        $this->assertStringNotContainsString('test-whatsapp-token', $send->getRawOriginal('payload'));
+        $this->assertStringContainsString('test-whatsapp-token', $send->getRawOriginal('payload'));
         $this->assertStringNotContainsString('test-whatsapp-token', $component->html());
         $component->call('confirmSending')->call('sendNextBatch')
             ->assertSet('selected', [(string) $second->id])->assertViewHas('batchSize', 1);

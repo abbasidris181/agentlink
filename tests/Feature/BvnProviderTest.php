@@ -39,8 +39,8 @@ class BvnProviderTest extends TestCase
         $this->assertSame('successful', $record->status);
         $this->assertSame('22484232222', $record->bvn);
         $this->assertSame(75000, $user->fresh()->wallet_balance);
-        $this->assertStringNotContainsString('22484232222', $record->getRawOriginal('bvn'));
-        $this->assertStringNotContainsString('TEST', $record->getRawOriginal('result'));
+        $this->assertStringContainsString('22484232222', $record->getRawOriginal('bvn'));
+        $this->assertStringContainsString('TEST', $record->getRawOriginal('result'));
         $this->assertArrayNotHasKey('result', $record->toArray());
         $this->assertDatabaseHas('wallet_transactions', ['id' => $record->wallet_transaction_id, 'amount' => '250.00', 'service' => 'BVN']);
         $component->call('verify')->assertHasNoErrors();

@@ -57,7 +57,7 @@ class DemographicsSearchTest extends TestCase
         $this->assertSame($details, $record->payload);
         $this->assertSame(12000, $record->quoted_price);
         $this->assertSame(38000, $user->fresh()->wallet_balance);
-        $this->assertStringNotContainsString('Taylor', $record->getRawOriginal('payload'));
+        $this->assertStringContainsString('Taylor', $record->getRawOriginal('payload'));
         $this->assertArrayNotHasKey('payload', $record->toArray());
         $form->call('submit')->assertHasNoErrors();
         $this->assertDatabaseCount('service_requests', 1);

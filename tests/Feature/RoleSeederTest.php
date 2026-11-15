@@ -87,18 +87,26 @@ class RoleSeederTest extends TestCase
 
     #[TestWith(['admin', null])]
     #[TestWith(['staff', null])]
-    #[TestWith(['admin', 'short'])]
-    #[TestWith(['staff', 'short'])]
-    public function test_missing_or_short_passwords_create_no_accounts(string $account, ?string $password): void
+    #[TestWith(['admin', ''])]
+    #[TestWith(['staff', ''])]
+    public function test_missing_passwords_create_no_accounts(string $account, ?string $password): void
     {
         config(['seeding.'.$account.'.password' => $password]);
         try {
             $this->seed(RoleSeeder::class);
-            $this->fail('Seed passwords must be explicitly configured and sufficiently long.');
+            $this->fail('Seed passwords must be explicitly configured.');
         } catch (ValidationException $exception) {
             $this->assertArrayHasKey($account.'.password', $exception->errors());
         }
         $this->assertDatabaseCount('users', 0);
+    }
+
+    public function test_short_seed_passwords_are_accepted_and_still_hashed(): void
+    {
+        config(['seeding.admin.password' => 'a', 'seeding.staff.password' => '1']);
+        $this->seed(RoleSeeder::class);
+        $this->assertTrue(Hash::check('a', User::query()->where('role', 'super_admin')->sole()->password));
+        $this->assertTrue(Hash::check('1', User::query()->where('role', 'staff')->sole()->password));
     }
 
     public function test_duplicate_seed_emails_are_rejected_ignoring_case(): void

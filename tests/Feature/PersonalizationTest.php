@@ -49,7 +49,7 @@ class PersonalizationTest extends TestCase
         $this->assertSame('12345', $record->provider_id);
         $this->assertSame('S7Y0OG319000HEM', $record->tracking_id);
         $this->assertNull($record->result);
-        $this->assertStringNotContainsString('S7Y0OG319000HEM', $record->getRawOriginal('tracking_id'));
+        $this->assertStringContainsString('S7Y0OG319000HEM', $record->getRawOriginal('tracking_id'));
         $this->assertArrayNotHasKey('tracking_id', $record->toArray());
         $this->assertSame(100000, $user->fresh()->wallet_balance);
         $this->assertDatabaseCount('wallet_transactions', 1);
@@ -91,7 +91,7 @@ class PersonalizationTest extends TestCase
             ->assertSee('12345678901')->assertSee('1990-05-16')->assertSee('Personalization portrait');
         $this->assertSame('successful', $record->fresh()->status);
         $this->assertSame($this->response('Successful')['data'], $record->fresh()->result);
-        $this->assertStringNotContainsString('ABBA', $record->fresh()->getRawOriginal('result'));
+        $this->assertStringContainsString('ABBA', $record->fresh()->getRawOriginal('result'));
         $this->assertArrayNotHasKey('result', $record->toArray());
         $this->travel(10)->seconds();
         $component->call('checkResult', $record->reference)->assertHasNoErrors()->assertSet('notice', 'Successful');

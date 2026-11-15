@@ -99,8 +99,8 @@ class BvnLicenseOnboardingTest extends TestCase
         $this->assertSame('01234567890', $record->payload['bvn']);
         $this->assertSame(12500, $record->quoted_price);
         $this->assertSame(37500, $user->fresh()->wallet_balance);
-        $this->assertStringNotContainsString('0012345678', $record->getRawOriginal('payload'));
-        $this->assertStringNotContainsString('taylor@example.test', $record->getRawOriginal('payload'));
+        $this->assertStringContainsString('0012345678', $record->getRawOriginal('payload'));
+        $this->assertStringContainsString('taylor@example.test', $record->getRawOriginal('payload'));
         $form->call('submit')->assertHasNoErrors();
         $this->assertDatabaseCount('service_requests', 1);
         $this->assertDatabaseCount('wallet_transactions', 1);

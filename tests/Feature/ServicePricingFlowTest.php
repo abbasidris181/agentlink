@@ -110,7 +110,7 @@ class ServicePricingFlowTest extends TestCase
         $this->assertSame($stage === 'second' ? 'Alex' : null, $record->payload['old_first_name'] ?? null);
         $this->assertSame($price + 5000, $record->quoted_price);
         $this->assertSame(100000 - $price - 5000, $user->fresh()->wallet_balance);
-        $this->assertStringNotContainsString('01234567890', $record->getRawOriginal('payload'));
+        $this->assertStringContainsString('01234567890', $record->getRawOriginal('payload'));
         Storage::disk('local')->assertExists($record->screenshot_path);
         $component->call('submit')->assertHasNoErrors();
         $this->assertDatabaseCount('service_requests', 1);

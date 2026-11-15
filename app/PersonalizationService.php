@@ -27,8 +27,7 @@ class PersonalizationService
             $owner = User::query()->lockForUpdate()->findOrFail($user->id);
             $this->authorize($owner);
             ServiceAvailability::validateSubmission('personalization', 'tracking');
-            $hash = hash_hmac('sha256', $trackingId, config('app.key'));
-            $existing = PersonalizationRequest::query()->where('user_id', $owner->id)->where('tracking_hash', $hash)->first();
+            $existing = PersonalizationRequest::query()->where('user_id', $owner->id)->where('tracking_id', $trackingId)->first();
             if ($existing !== null) {
                 return [$existing, false];
             }
@@ -42,7 +41,7 @@ class PersonalizationService
             }
             $record = PersonalizationRequest::create([
                 'user_id' => $owner->id, 'reference' => (string) Str::ulid(),
-                'tracking_id' => $trackingId, 'tracking_hash' => $hash, 'status' => 'pending',
+                'tracking_id' => $trackingId, 'status' => 'pending',
             ]);
             $oldBalance = $owner->wallet_balance;
             $owner->wallet_balance -= $price;

@@ -16,7 +16,6 @@ class PersonalizationRequestFactory extends Factory
             'user_id' => User::factory(),
             'reference' => (string) Str::ulid(),
             'tracking_id' => strtoupper(fake()->bothify('?????##########')),
-            'tracking_hash' => fn (array $attributes): string => hash_hmac('sha256', $attributes['tracking_id'], config('app.key')),
             'status' => 'in_progress',
             'provider_id' => (string) fake()->numberBetween(1, 999999),
         ];

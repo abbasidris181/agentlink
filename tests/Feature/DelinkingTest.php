@@ -98,7 +98,7 @@ class DelinkingTest extends TestCase
         }, $user->fresh()->wallet_balance);
         $this->assertSame('Self-Service', $record->serviceLabel());
         $this->assertDatabaseCount('wallet_transactions', 1);
-        $this->assertStringNotContainsString('01234567890', $record->getRawOriginal('payload'));
+        $this->assertStringContainsString('01234567890', $record->getRawOriginal('payload'));
         $this->assertSame($expectedTypes, $record->inputDetails()['Type']);
         $this->actingAs(User::factory()->administrator()->create());
         $this->get(route('admin.requests.show', ['requestId' => $record->id]))->assertOk()->assertSee('Self-Service')->assertSee($expectedTypes);

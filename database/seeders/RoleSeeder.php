@@ -25,13 +25,12 @@ class RoleSeeder extends Seeder
             ];
             $rules[$account.'.name'] = ['required', 'string', 'max:255'];
             $rules[$account.'.email'] = ['required', 'string', 'email:rfc', 'max:255'];
-            $rules[$account.'.password'] = ['required', 'string', 'min:12'];
+            $rules[$account.'.password'] = ['required', 'string'];
         }
         $rules['staff.email'][] = 'different:admin.email';
         $accounts = Validator::make($accounts, $rules, [
             'admin.password.required' => 'Set SEED_ADMIN_PASSWORD before running RoleSeeder.',
             'staff.password.required' => 'Set SEED_STAFF_PASSWORD before running RoleSeeder.',
-            'min' => 'Seed account passwords must contain at least 12 characters.',
         ])->validate();
 
         DB::transaction(function () use ($accounts): void {

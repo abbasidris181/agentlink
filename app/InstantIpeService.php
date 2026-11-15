@@ -35,15 +35,15 @@ class InstantIpeService
             throw ValidationException::withMessages(['trackingInput' => 'Single mode accepts one tracking ID.']);
         }
         $this->assertConfigured();
-        $hash = hash('sha256', json_encode([$mode, array_values($trackingIds)], JSON_THROW_ON_ERROR));
         try {
-            return DB::transaction(function () use ($user, $mode, $trackingIds, $requestKey, $hash): InstantIpeSubmission {
+            return DB::transaction(function () use ($user, $mode, $trackingIds, $requestKey): InstantIpeSubmission {
                 $owner = User::query()->lockForUpdate()->findOrFail($user->id);
                 abort_unless($owner->is_active && ! $owner->needsEmailVerification(), 403);
                 ServiceAvailability::validateSubmission('instant-ipe', $mode);
                 $existing = InstantIpeSubmission::query()->where('request_key', $requestKey)->first();
                 if ($existing !== null) {
-                    if ($existing->user_id !== $owner->id || $existing->input_hash !== $hash) {
+                    if ($existing->user_id !== $owner->id || $existing->mode !== $mode
+                        || $existing->requests()->orderBy('id')->pluck('tracking_id')->all() !== array_values($trackingIds)) {
                         throw ValidationException::withMessages(['trackingInput' => 'This submission reference has already been used. Reload the page.']);
                     }
 
@@ -65,7 +65,7 @@ class InstantIpeService
                         $batch = (string) random_int(10000000, 99999999);
                     } while (InstantIpeSubmission::query()->where('batch_id', $batch)->exists());
                 }
-                $submission = InstantIpeSubmission::create(['user_id' => $owner->id, 'request_key' => $requestKey, 'batch_id' => $batch, 'mode' => $mode, 'input_hash' => $hash]);
+                $submission = InstantIpeSubmission::create(['user_id' => $owner->id, 'request_key' => $requestKey, 'batch_id' => $batch, 'mode' => $mode]);
                 foreach ($trackingIds as $trackingId) {
                     $record = InstantIpeRequest::create(['instant_ipe_submission_id' => $submission->id, 'user_id' => $owner->id, 'reference' => (string) Str::ulid(), 'tracking_id' => $trackingId, 'active_tracking_id' => null, 'price' => $price, 'status' => 'queued']);
                     $oldBalance = $owner->wallet_balance;

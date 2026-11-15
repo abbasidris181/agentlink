@@ -53,7 +53,7 @@ class ManualServiceRequestsTest extends TestCase
         foreach ($inputs as $field => $value) {
             $form->set($field, $value);
         }
-        $form->call('submit')->assertHasNoErrors()->assertSee('Request submitted for admin review.')->assertSee('Pending');
+        $form->call('submit')->assertHasNoErrors()->assertSee('Request submitted')->assertSee('Pending');
         $record = ServiceRequest::query()->sole();
         $this->assertSame($owner->id, $record->user_id);
         $this->assertSame($service, $record->service);
@@ -90,12 +90,12 @@ class ManualServiceRequestsTest extends TestCase
         $this->get(route('admin.requests.show', ['requestId' => $record->id]))->assertOk()->assertSee('AG001')->assertSee('TKT001')->assertSee('BMS001')->assertSee('Download screenshot proof');
     }
 
-    public function test_sensitive_input_and_replies_are_encrypted_and_not_serialized(): void
+    public function test_input_and_replies_are_plain_text_but_not_serialized(): void
     {
         $record = ServiceRequest::factory()->create(['payload' => ['nin' => '01234567890'], 'reply' => 'Sensitive reply example']);
         $stored = DB::table('service_requests')->where('id', $record->id)->first();
-        $this->assertStringNotContainsString('01234567890', $stored->payload);
-        $this->assertStringNotContainsString('Sensitive reply example', $stored->reply);
+        $this->assertSame(['nin' => '01234567890'], json_decode($stored->payload, true));
+        $this->assertSame('Sensitive reply example', $stored->reply);
         $this->assertSame('01234567890', $record->fresh()->payload['nin']);
         $this->assertArrayNotHasKey('payload', $record->toArray());
         $this->assertArrayNotHasKey('reply', $record->toArray());

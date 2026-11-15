@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Models\SiteSetting;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 
 class ParroticaSettings
@@ -13,7 +12,7 @@ class ParroticaSettings
     {
         $saved = SiteSetting::query()->where('key', 'notification_parrotica')->value('value');
 
-        return $saved ? json_decode(Crypt::decryptString($saved), true, flags: JSON_THROW_ON_ERROR) : [
+        return $saved ? json_decode($saved, true, flags: JSON_THROW_ON_ERROR) : [
             'url' => (string) config('services.parrotica.url'),
             'user_id' => (string) config('services.parrotica.user_id'),
             'sender_id' => (string) config('services.parrotica.sender_id'),
@@ -45,6 +44,6 @@ class ParroticaSettings
     public static function save(array $settings): void
     {
         self::validate($settings);
-        SiteSetting::query()->updateOrCreate(['key' => 'notification_parrotica'], ['value' => Crypt::encryptString(json_encode($settings, JSON_THROW_ON_ERROR))]);
+        SiteSetting::query()->updateOrCreate(['key' => 'notification_parrotica'], ['value' => json_encode($settings, JSON_THROW_ON_ERROR)]);
     }
 }

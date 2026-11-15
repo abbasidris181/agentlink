@@ -12,6 +12,6 @@ class InstantIpeSubmissionFactory extends Factory
 {
     public function definition(): array
     {
-        return ['user_id' => User::factory(), 'request_key' => (string) Str::uuid(), 'batch_id' => null, 'mode' => 'single', 'input_hash' => hash('sha256', fake()->uuid())];
+        return ['user_id' => User::factory(), 'request_key' => (string) Str::uuid(), 'batch_id' => null, 'mode' => 'single'];
     }
 }

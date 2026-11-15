@@ -18,7 +18,7 @@ class AdminNotificationSend extends Model
 
     protected function casts(): array
     {
-        return ['payload' => 'encrypted:array', 'recipients' => 'encrypted:array', 'confirmed_at' => 'datetime'];
+        return ['payload' => 'array', 'recipients' => 'array', 'confirmed_at' => 'datetime'];
     }
 
     public function user(): BelongsTo
