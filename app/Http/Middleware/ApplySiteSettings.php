@@ -23,7 +23,7 @@ class ApplySiteSettings
                 'site.login_disabled' => $settings->get('login_disabled') === '1',
                 'site.registration_disabled' => $settings->get('registration_disabled') === '1',
                 'services.whatsapp.url' => $settings->get('whatsapp_url', ''),
-                'services.whatsapp.number' => $settings->get('whatsapp_number', config('services.whatsapp.number')),
+                'services.whatsapp.number' => $settings->get('whatsapp_number', ''),
             ]);
         }
 

@@ -6,11 +6,7 @@
             @if ($errors->any())<div role="alert" class="rounded-xl bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">@foreach ($errors->all() as $error)<p>{{ $error }}</p>@endforeach</div>@endif
             <p class="text-sm leading-6 text-amber-700 dark:text-amber-300">Monielinks transfers currently need support confirmation before wallet credit. Funding charge: {{ $fundingCharge }}%.</p>
             @if ($account?->status === 'active')
-                <div x-data="{ copied: false }" class="rounded-xl border border-slate-200 p-4 dark:border-slate-700">
-                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400">{{ $account->bank }}</p>
-                    <div class="mt-2 flex items-center justify-between gap-3"><p class="select-all text-2xl font-bold tracking-wider tabular-nums">{{ $account->account_number }}</p><button type="button" x-on:click="navigator.clipboard.writeText(@js($account->account_number)).then(() => { copied = true; setTimeout(() => copied = false, 2000) }).catch(() => copied = false)" class="rounded-lg bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-200" x-text="copied ? 'Copied' : 'Copy'">Copy</button></div>
-                    <p class="mt-2 break-words text-sm">{{ $account->account_name }}</p>
-                </div>
+                <x-bank-account-card wire:key="monielinks-bank-{{ $account->id }}" :bank-name="$account->bank" :account-number="$account->account_number" :account-name="$account->account_name" />
             @elseif ($account && $account->status !== 'failed')
                 <p role="status" class="text-sm leading-6 text-slate-500 dark:text-slate-400">{{ $account->last_error ?? 'Your account request is being processed. Contact support before trying again.' }}</p>
             @elseif ($available)

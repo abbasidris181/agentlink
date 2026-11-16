@@ -152,7 +152,7 @@
                     <div class="relative z-10 mt-8 flex flex-col gap-6">
                         <div>
                             <p class="text-sm font-medium text-slate-300">Wallet balance</p>
-                            <p class="mt-2 break-words text-4xl font-bold tracking-tight tabular-nums">{{ \App\Money::format($walletBalance) }}</p>
+                            <p class="mt-2 break-words text-4xl font-bold tracking-tight tabular-nums">₦{{ \App\Money::format($walletBalance) }}</p>
                         </div>
                         <div class="flex flex-wrap gap-3">
                             <button type="button" x-on:click="$refs.walletDialog.showModal()" class="flex flex-1 basis-44 items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 px-4 py-3 text-sm font-semibold shadow-lg transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-300 active:scale-[0.99]">
@@ -168,6 +168,7 @@
                     </div>
                     <dialog wire:ignore.self x-ref="walletDialog" aria-labelledby="wallet-dialog-heading" class="fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-2xl border border-slate-200 bg-white p-8 text-slate-900 shadow-2xl backdrop:bg-slate-950/50 backdrop:backdrop-blur-sm dark:border-slate-700 dark:bg-surface-dark dark:text-slate-100">
                         <h2 id="wallet-dialog-heading" class="text-xl font-bold">Fund Wallet</h2>
+                        <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">View your dedicated bank accounts or create an account below.</p>
                         <livewire:wallet-funding />
                         <livewire:monielinks-funding />
                         <form method="dialog" class="mt-6">

@@ -8,11 +8,7 @@
     @if ($account?->status === 'active')
         <p class="text-sm leading-6 text-slate-500 dark:text-slate-400">Transfer to your dedicated account below whenever you want to fund your wallet. Funding charge: <strong>{{ $fundingCharge }}%</strong>. Your wallet receives the transferred amount minus this charge after payment verification.</p>
         @foreach ($account->accounts as $bank)
-            <div wire:key="bank-{{ $bank['bankCode'] }}-{{ $bank['accountNumber'] }}" x-data="{ copied: false }" class="rounded-xl border border-slate-200 p-4 dark:border-slate-700">
-                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400">{{ $bank['bankName'] }}</p>
-                <div class="mt-2 flex items-center justify-between gap-3"><p class="select-all text-2xl font-bold tracking-wider tabular-nums">{{ $bank['accountNumber'] }}</p><button type="button" x-on:click="navigator.clipboard.writeText(@js($bank['accountNumber'])).then(() => { copied = true; setTimeout(() => copied = false, 2000) }).catch(() => copied = false)" class="rounded-lg bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-200" x-text="copied ? 'Copied' : 'Copy'">Copy</button></div>
-                <p class="mt-2 break-words text-sm">{{ $bank['accountName'] }}</p>
-            </div>
+            <x-bank-account-card wire:key="bank-{{ $bank['bankCode'] }}-{{ $bank['accountNumber'] }}" :bank-name="$bank['bankName']" :account-number="$bank['accountNumber']" :account-name="$bank['accountName']" />
         @endforeach
     @elseif ($available && (! $account || $account->status === 'failed'))
         <p class="text-sm leading-6 text-slate-500 dark:text-slate-400">Create your permanent bank account for wallet funding. Provide your BVN or NIN, or both. Funding charge: <strong>{{ $fundingCharge }}%</strong>.</p>

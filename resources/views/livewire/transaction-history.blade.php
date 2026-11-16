@@ -27,8 +27,8 @@
                             <td class="px-6 py-4 font-mono text-sm sm:px-8">{{ $transaction->reference }}@if ($transaction->transfer_reference)<span class="mt-1 block text-xs text-slate-400">Transfer: {{ $transaction->transfer_reference }}</span>@endif</td>
                             <td class="px-6 py-4">{{ $transaction->service }}</td>
                             <td class="px-6 py-4"><span class="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">{{ ucfirst($transaction->status) }}</span></td>
-                            <td class="px-6 py-4 tabular-nums">{{ \App\Money::format($transaction->old_balance) }}</td>
-                            <td class="px-6 py-4 tabular-nums">{{ \App\Money::format($transaction->new_balance) }}</td>
+                            <td class="px-6 py-4 tabular-nums">₦{{ \App\Money::format($transaction->old_balance) }}</td>
+                            <td class="px-6 py-4 tabular-nums">₦{{ \App\Money::format($transaction->new_balance) }}</td>
                             <td class="whitespace-nowrap px-6 py-4 text-xs text-slate-400 sm:px-8">{{ $transaction->created_at->format('d M Y H:i') }}</td>
                         </tr>
                     @empty

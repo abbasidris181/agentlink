@@ -20,7 +20,7 @@
                         @foreach ($definition['methods'] as $method => $label)
                             <div>
                                 <div class="mb-2 flex flex-wrap items-center justify-between gap-3">
-                                    <label for="price-{{ $service }}-{{ $method }}" class="text-sm font-medium">{{ $label }}</label>
+                                    <label for="price-{{ $service }}-{{ $method }}" class="text-sm font-medium">{{ $label }} (₦)</label>
                                     @include('livewire.admin.type-unavailable', ['priceService' => $service, 'priceMethod' => $method, 'typeLabel' => $definition['label'].' '.$label])
                                     @if (in_array($service, \App\Models\ServicePrice::NIN_SERVICES, true))
                                         <label for="charge-error-{{ $service }}-{{ $method }}" class="flex cursor-pointer items-center gap-2">

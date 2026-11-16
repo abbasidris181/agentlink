@@ -7,7 +7,7 @@
     @can('dashboard.view')
     <div class="mb-7 grid grid-cols-2 gap-4 xl:grid-cols-4">
         @foreach ($metrics as $label => $value)
-            <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-surface-dark"><h2 class="text-xs font-medium text-slate-500 dark:text-muted-light">{{ $label }}</h2><p class="mt-3 break-words text-4xl font-bold tracking-tight tabular-nums">{{ $value }}</p></article>
+            <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-surface-dark"><h2 class="text-xs font-medium text-slate-500 dark:text-muted-light">{{ $label }}</h2><p class="mt-3 break-words text-4xl font-bold tracking-tight tabular-nums">{{ $label === 'Wallet balances' ? '₦'.$value : $value }}</p></article>
         @endforeach
     </div>
     @can('prices.view')

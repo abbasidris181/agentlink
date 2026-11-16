@@ -29,7 +29,7 @@ return [
     ],
 
     'whatsapp' => [
-        'number' => env('WHATSAPP_NUMBER', ''),
+        'number' => '',
         'send_url' => env('WA_SEND_URL'),
         'send_token' => env('WA_SEND_TOKEN'),
     ],

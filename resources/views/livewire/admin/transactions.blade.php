@@ -63,10 +63,10 @@
                                 </td>
                             @endif
                             <td class="px-4 py-4">{{ ucfirst(str_replace('_', ' ', $transaction->type)) }}</td>
-                            <td class="px-4 py-4 tabular-nums">{{ \App\Money::format($transaction->amount) }}</td>
+                            <td class="px-4 py-4 tabular-nums">₦{{ \App\Money::format($transaction->amount) }}</td>
                             <td class="px-4 py-4"><span class="inline-block whitespace-nowrap rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold dark:bg-slate-800">{{ ucfirst($transaction->status) }}</span></td>
-                            <td class="px-4 py-4 tabular-nums">{{ \App\Money::format($transaction->old_balance) }}</td>
-                            <td class="px-4 py-4 tabular-nums">{{ \App\Money::format($transaction->new_balance) }}</td>
+                            <td class="px-4 py-4 tabular-nums">₦{{ \App\Money::format($transaction->old_balance) }}</td>
+                            <td class="px-4 py-4 tabular-nums">₦{{ \App\Money::format($transaction->new_balance) }}</td>
                             <td class="whitespace-nowrap px-4 py-4 text-xs">{{ $transaction->created_at->format('d M Y H:i') }}</td>
                         </tr>
                     @empty

@@ -97,7 +97,7 @@
                                         </form>
                                     @endcan
                                 </td>
-                                <td class="px-5 py-4 tabular-nums">{{ $request->quoted_price === null ? 'Not set' : \App\Money::format($request->quoted_price) }}</td>
+                                <td class="px-5 py-4 tabular-nums">{{ $request->quoted_price === null ? 'Not set' : '₦'.\App\Money::format($request->quoted_price) }}</td>
                                 <td class="whitespace-nowrap px-5 py-4 text-xs">{{ $request->created_at->format('d M Y H:i') }}</td>
                                 <td class="min-w-44 px-5 py-4">
                                     <a href="{{ route('admin.requests.show', ['requestId' => $request->id]) }}" class="font-semibold text-indigo-600 dark:text-indigo-300">View request</a>
@@ -119,7 +119,7 @@
             <section class="rounded-3xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-surface-dark"><h2 class="text-xl font-semibold">Submitted details</h2><dl class="mt-5 grid gap-4">
                 @foreach (['User' => $selectedRequest->user->name, 'Email' => $selectedRequest->user->email, 'Method' => $selectedRequest->methodLabel(), 'Submitted' => $selectedRequest->created_at->format('d M Y H:i'), 'Status' => $selectedRequest->statusLabel()] as $label => $value)<div><dt class="text-xs text-slate-500 dark:text-muted-light">{{ $label }}</dt><dd class="mt-1 break-words text-sm font-medium">{{ $value }}</dd></div>@endforeach
                 @foreach ($selectedRequest->inputDetails() as $label => $value)<div><dt class="text-xs text-slate-500 dark:text-muted-light">{{ $label }}</dt><dd class="mt-1 break-all font-mono text-sm">{{ $value }}</dd></div>@endforeach
-                <div><dt class="text-xs text-slate-500 dark:text-muted-light">Price</dt><dd class="mt-1 font-semibold tabular-nums">{{ $selectedRequest->quoted_price === null ? 'Not set' : \App\Money::format($selectedRequest->quoted_price) }}</dd><p class="mt-1 text-xs text-slate-500 dark:text-muted-light">{{ $selectedRequest->walletTransaction?->refund ? 'Payment refunded to wallet.' : ($selectedRequest->walletTransaction ? 'Paid from wallet on submission.' : 'No payment recorded.') }}</p></div>
+                <div><dt class="text-xs text-slate-500 dark:text-muted-light">Price</dt><dd class="mt-1 font-semibold tabular-nums">{{ $selectedRequest->quoted_price === null ? 'Not set' : '₦'.\App\Money::format($selectedRequest->quoted_price) }}</dd><p class="mt-1 text-xs text-slate-500 dark:text-muted-light">{{ $selectedRequest->walletTransaction?->refund ? 'Payment refunded to wallet.' : ($selectedRequest->walletTransaction ? 'Paid from wallet on submission.' : 'No payment recorded.') }}</p></div>
             </dl>
                 <div class="mt-5">@include('livewire.admin.request-refund', ['request' => $selectedRequest])</div>
                 @if ($selectedRequest->screenshot_path)<a href="{{ route('service-requests.proof', $selectedRequest) }}" class="mt-6 inline-flex rounded-xl border border-indigo-200 px-4 py-3 text-sm font-semibold text-indigo-600 dark:border-indigo-800 dark:text-indigo-300">Download screenshot proof</a>@endif

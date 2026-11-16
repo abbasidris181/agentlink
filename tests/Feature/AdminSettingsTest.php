@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Livewire\Admin\Settings;
 use App\Models\SiteSetting;
 use App\Models\User;
+use Database\Seeders\SiteSettingSeeder;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\TestWith;
@@ -76,6 +77,25 @@ class AdminSettingsTest extends TestCase
         $this->actingAs(User::factory()->create());
         $this->get(route('dashboard'))->assertOk()->assertDontSee('id="whatsapp-support-link"', false)
             ->assertDontSee('whatsapp-support-panel');
+    }
+
+    public function test_legacy_configuration_cannot_supply_an_unsaved_whatsapp_destination(): void
+    {
+        config(['services.whatsapp.number' => '2348012345678', 'services.whatsapp.url' => 'https://wa.me/2348012345678']);
+        $this->actingAs(User::factory()->administrator()->create());
+        Livewire::test(Settings::class)->assertSet('whatsappNumber', '')->assertSet('whatsappUrl', '');
+        $this->get(route('dashboard'))->assertOk()->assertDontSee('id="whatsapp-support-link"', false);
+    }
+
+    public function test_settings_seeder_does_not_add_a_default_whatsapp_destination_or_overwrite_admin_values(): void
+    {
+        config(['services.whatsapp.number' => '2348012345678']);
+        $this->seed(SiteSettingSeeder::class);
+        $this->assertDatabaseHas('site_settings', ['key' => 'whatsapp_number', 'value' => '']);
+        $this->assertDatabaseHas('site_settings', ['key' => 'whatsapp_url', 'value' => '']);
+        SiteSetting::query()->where('key', 'whatsapp_url')->update(['value' => 'https://wa.link/admin-saved-link']);
+        $this->seed(SiteSettingSeeder::class);
+        $this->assertDatabaseHas('site_settings', ['key' => 'whatsapp_url', 'value' => 'https://wa.link/admin-saved-link']);
     }
 
     public function test_invalid_stored_link_cannot_inject_a_script_into_the_widget(): void

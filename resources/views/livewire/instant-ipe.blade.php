@@ -58,7 +58,7 @@
                     @if ($batchId !== null)
                         <p>Batch ID: <button type="button" wire:click="viewBatch('{{ $batchId }}')" aria-label="View batch {{ $batchId }}" class="font-mono font-semibold underline underline-offset-2">{{ $batchId }}</button></p>
                     @endif
-                    <p class="mt-1">Wallet charged: {{ \App\Money::format($totalCharged) }}. Requests are submitted for processing.</p>
+                    <p class="mt-1">Wallet charged: ₦{{ \App\Money::format($totalCharged) }}. Requests are submitted for processing.</p>
                 </div>
             @endif
         </form>
@@ -102,9 +102,9 @@
                                 @if ($request->nin !== null)<p class="mt-2 font-mono text-sm">NIN: {{ $request->nin }}</p>@endif
                                 @if (($request->reply === null || $request->reply === '') && $request->nin === null)<span class="text-slate-400">&mdash;</span>@endif
                             </td>
-                            <td class="px-4 py-4 tabular-nums">{{ \App\Money::format($request->price) }}</td>
+                            <td class="px-4 py-4 tabular-nums">₦{{ \App\Money::format($request->price) }}</td>
                             <td class="px-4 py-4"><span @class(['inline-block rounded-full px-2 py-1 text-xs font-semibold', 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' => $request->status === 'successful', 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300' => $request->status === 'failed', 'bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-300' => ! in_array($request->status, ['successful', 'failed'], true)])>{{ $request->statusLabel() }}</span>
-                                @if ($request->refunded_at)<p class="mt-2 text-xs text-emerald-700 dark:text-emerald-300">Refunded {{ \App\Money::format($request->price) }}</p>@endif
+                                @if ($request->refunded_at)<p class="mt-2 text-xs text-emerald-700 dark:text-emerald-300">Refunded ₦{{ \App\Money::format($request->price) }}</p>@endif
                                 @if ($request->last_error)<p class="mt-2 text-xs text-slate-500 dark:text-muted-light">{{ $request->last_error }}</p>@endif
                             </td>
                             <td class="px-4 py-4 text-xs"><p>{{ $request->created_at->format('d M Y H:i') }}</p></td>

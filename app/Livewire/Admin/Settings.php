@@ -35,7 +35,7 @@ class Settings extends AdminComponent
         $this->siteName = $settings->get('site_name') ?: config('app.name');
         $this->supportEmail = $settings->get('support_email') ?? '';
         $this->supportPhone = $settings->get('support_phone') ?? '';
-        $this->whatsappNumber = $settings->get('whatsapp_number') ?? (string) config('services.whatsapp.number', '');
+        $this->whatsappNumber = $settings->get('whatsapp_number') ?? '';
         $this->whatsappUrl = $settings->get('whatsapp_url') ?? '';
         $this->announcement = $settings->get('announcement') ?? '';
         $this->emailVerificationEnabled = $settings->get('email_verification_enabled') === '1';

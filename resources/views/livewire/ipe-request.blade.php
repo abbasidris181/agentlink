@@ -37,7 +37,7 @@
                 </button>
             </div>
             @if ($showAvailability)
-                <p role="status" class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-300">Request submitted for admin review. Reference: <span class="break-all font-mono">{{ $submittedReference }}</span>. Wallet charged: {{ \App\Money::format($submittedPriceMinor) }}.</p>
+                <p role="status" class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-300">Request submitted for admin review. Reference: <span class="break-all font-mono">{{ $submittedReference }}</span>. Wallet charged: ₦{{ \App\Money::format($submittedPriceMinor) }}.</p>
             @endif
         </form>
     </section>
@@ -69,7 +69,7 @@
                 </thead>
                 <tbody>
                     @forelse ($history as $request)
-                        <tr wire:key="request-{{ $request->id }}" class="border-b border-slate-100 dark:border-slate-800"><td class="break-all px-6 py-4 font-mono text-sm">{{ $request->reference }}</td><td class="break-words px-6 py-4 font-mono text-sm">{{ $request->inputSummary() }}</td><td class="px-6 py-4"><span @class(['inline-block rounded-full px-2 py-1 text-xs font-semibold', 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' => $request->status === 'completed', 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300' => $request->status === 'rejected', 'bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-300' => in_array($request->status, ['pending', 'in_progress'], true)])>{{ $request->statusLabel() }}</span></td><td class="px-6 py-4 text-xs text-slate-500 dark:text-muted-light">{{ $request->created_at->format('d M Y H:i') }}</td><td class="px-6 py-4 tabular-nums">{{ $request->quoted_price === null ? 'Not set' : \App\Money::format($request->quoted_price) }}</td><td class="whitespace-pre-line break-words px-6 py-4">{{ $request->reply ?: 'Awaiting admin reply' }}</td></tr>
+                        <tr wire:key="request-{{ $request->id }}" class="border-b border-slate-100 dark:border-slate-800"><td class="break-all px-6 py-4 font-mono text-sm">{{ $request->reference }}</td><td class="break-words px-6 py-4 font-mono text-sm">{{ $request->inputSummary() }}</td><td class="px-6 py-4"><span @class(['inline-block rounded-full px-2 py-1 text-xs font-semibold', 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' => $request->status === 'completed', 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300' => $request->status === 'rejected', 'bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-300' => in_array($request->status, ['pending', 'in_progress'], true)])>{{ $request->statusLabel() }}</span></td><td class="px-6 py-4 text-xs text-slate-500 dark:text-muted-light">{{ $request->created_at->format('d M Y H:i') }}</td><td class="px-6 py-4 tabular-nums">{{ $request->quoted_price === null ? 'Not set' : '₦'.\App\Money::format($request->quoted_price) }}</td><td class="whitespace-pre-line break-words px-6 py-4">{{ $request->reply ?: 'Awaiting admin reply' }}</td></tr>
                     @empty
                     <tr>
                         <td colspan="6" class="px-6 py-12 text-center">
