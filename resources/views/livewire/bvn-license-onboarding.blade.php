@@ -36,9 +36,9 @@
                             @elseif ($field === 'region')
                                 <input id="onboarding-region" value="{{ $this->region }}" readonly aria-readonly="true" placeholder="Select a state to see its region" class="w-full rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-900">
                             @elseif ($field === 'address')
-                                <textarea id="onboarding-address" wire:model="details.address" rows="3" maxlength="1000" required class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-800"></textarea>
+                                <textarea placeholder="Enter your complete residential address" id="onboarding-address" wire:model="details.address" rows="3" maxlength="1000" required class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-800"></textarea>
                             @else
-                                <input id="onboarding-{{ $field }}" wire:model="details.{{ $field }}" type="{{ match ($field) { 'dob' => 'date', 'email' => 'email', 'phone' => 'tel', default => 'text' } }}" required
+                                <input @if ($field !== 'dob') placeholder="{{ match ($field) { 'email' => 'name@example.com', 'phone' => 'e.g. 08012345678', 'bvn' => 'Enter your 11-digit BVN', 'account_number' => 'Enter your 10-digit account number', default => 'Enter your '.strtolower($label) } }}" @endif id="onboarding-{{ $field }}" wire:model="details.{{ $field }}" type="{{ match ($field) { 'dob' => 'date', 'email' => 'email', 'phone' => 'tel', default => 'text' } }}" required
                                     @if ($field === 'dob') max="{{ now()->toDateString() }}"
                                     @elseif (in_array($field, ['bvn', 'account_number'], true)) inputmode="numeric" minlength="{{ $field === 'bvn' ? 11 : 10 }}" maxlength="{{ $field === 'bvn' ? 11 : 10 }}" pattern="[0-9]{{ $field === 'bvn' ? '{11}' : '{10}' }}" autocomplete="off"
                                     @else maxlength="{{ match ($field) { 'email' => 254, 'phone' => 25, 'account_name' => 200, default => 150 } }}" @endif

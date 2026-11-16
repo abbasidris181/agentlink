@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\BvnVerificationResultController;
+use App\Http\Controllers\MonielinksWebhookController;
+use App\Http\Controllers\MonnifyWebhookController;
 use App\Http\Controllers\NinVerificationResultController;
 use App\Http\Controllers\PersonalizationSlipController;
 use App\Http\Controllers\ServiceRequestProofController;
@@ -22,6 +24,8 @@ Route::get('/', function () {
 })->name('home');
 
 Route::view('/register', 'register')->middleware('guest')->name('register');
+Route::post('/api/payments/monnify/webhook', MonnifyWebhookController::class)->name('monnify.webhook');
+Route::post('/api/payments/monielinks/webhook', MonielinksWebhookController::class)->name('monielinks.webhook');
 
 Route::view('/email/verify', 'verify-email')->middleware('auth')->name('verification.notice');
 Route::get('/email/verify/{id}/{hash}', VerifyEmailController::class)->middleware(['auth', 'signed', 'throttle:6,1'])->name('verification.verify');

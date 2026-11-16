@@ -18,7 +18,7 @@
                     @foreach (['first_name' => 'First name', 'last_name' => 'Last name', 'middle_name' => 'Middle name (optional)'] as $field => $label)
                         <div>
                             <label for="demographics-{{ $field }}" class="mb-2 block text-sm font-medium">{{ $label }}</label>
-                            <input id="demographics-{{ $field }}" wire:model="details.{{ $field }}" type="text" maxlength="100" @required($field !== 'middle_name') class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-800">
+                            <input id="demographics-{{ $field }}" wire:model="details.{{ $field }}" placeholder="Enter {{ strtolower($label) }}" type="text" maxlength="100" @required($field !== 'middle_name') class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-800">
                             @error('details.'.$field)<p role="alert" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>@enderror
                         </div>
                     @endforeach

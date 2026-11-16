@@ -17,7 +17,7 @@
         <form wire:submit="submit" class="flex flex-col gap-5">
             <div>
                 <label for="personalization-tracking" class="mb-2 block text-sm font-medium">Tracking ID</label>
-                <input id="personalization-tracking" wire:model="trackingId" type="text" autocomplete="off" minlength="15" maxlength="15" pattern="[A-Za-z0-9]{15}" required aria-describedby="personalization-tracking-help" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-mono text-base dark:border-slate-700 dark:bg-slate-800">
+                <input id="personalization-tracking" wire:model="trackingId" placeholder="Enter your 15-character tracking ID" type="text" autocomplete="off" minlength="15" maxlength="15" pattern="[A-Za-z0-9]{15}" required aria-describedby="personalization-tracking-help" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-mono text-base dark:border-slate-700 dark:bg-slate-800">
                 <p id="personalization-tracking-help" class="mt-2 text-xs text-slate-500 dark:text-muted-light">Enter exactly 15 letters or numbers.</p>
                 @error('trackingId') <p role="alert" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
             </div>

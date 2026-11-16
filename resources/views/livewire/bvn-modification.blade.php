@@ -42,7 +42,7 @@
                 @foreach ($this->fields as $key => $field)
                     <div wire:key="bvn-modification-field-{{ $key }}">
                         <label for="bvn-modification-{{ $key }}" class="mb-2 block text-sm font-medium">{{ $field['label'] }}</label>
-                        <input id="bvn-modification-{{ $key }}" wire:model="{{ $key }}" type="{{ $field['type'] }}" required
+                        <input id="bvn-modification-{{ $key }}" wire:model="{{ $key }}" type="{{ $field['type'] }}" @if ($field['type'] !== 'date') placeholder="{{ match ($key) { 'bvn' => 'Enter your 11-digit BVN', 'nin' => 'Enter your 11-digit NIN', 'phone' => 'Enter the new phone number', default => 'Enter '.strtolower($field['label']) } }}" @endif required
                             @if (in_array($key, ['bvn', 'nin'], true)) inputmode="numeric" minlength="11" maxlength="11" pattern="[0-9]{11}" autocomplete="off"
                             @elseif ($field['type'] === 'date') max="{{ now()->toDateString() }}"
                             @else maxlength="{{ $field['type'] === 'tel' ? 25 : 100 }}" @endif

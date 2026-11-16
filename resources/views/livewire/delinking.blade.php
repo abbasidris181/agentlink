@@ -46,7 +46,7 @@
             @if (in_array('delinking', $types, true))
                 <div wire:key="self-service-email">
                     <label for="self-service-email" class="mb-2 block text-sm font-medium">Email (optional)</label>
-                    <input id="self-service-email" wire:model="email" type="email" autocomplete="email" maxlength="254" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-800">
+                    <input id="self-service-email" wire:model="email" placeholder="name@example.com (optional)" type="email" autocomplete="email" maxlength="254" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-800">
                     @error('email') <p role="alert" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
                 </div>
             @endif

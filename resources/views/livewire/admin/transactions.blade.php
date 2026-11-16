@@ -34,7 +34,7 @@
                                             @if ($replyRequestId === $request->id)
                                                 <form wire:submit="saveReply" class="mt-3 flex flex-col gap-2">
                                                     <label for="admin-ipe-reply-{{ $request->id }}" class="text-xs font-semibold">Reply to user</label>
-                                                    <textarea wire:model="reply" id="admin-ipe-reply-{{ $request->id }}" rows="3" required maxlength="10000" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800"></textarea>
+                                                    <textarea placeholder="Enter the result or reply for this request" wire:model="reply" id="admin-ipe-reply-{{ $request->id }}" rows="3" required maxlength="10000" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800"></textarea>
                                                     <div class="flex gap-2">
                                                         <button type="submit" wire:loading.attr="disabled" class="rounded-lg bg-indigo-600 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50">Send reply</button>
                                                         <button type="button" wire:click="cancelReply" class="rounded-lg border border-slate-200 px-3 py-2 text-xs dark:border-slate-700">Cancel</button>

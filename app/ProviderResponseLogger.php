@@ -49,7 +49,7 @@ class ProviderResponseLogger
                 return;
             }
             Log::build([
-                'driver' => 'daily',
+                'driver' => in_array($service, ['monnify', 'monielinks'], true) ? 'single' : 'daily',
                 'path' => rtrim(config('logging.provider_responses.directory'), '/').'/'.$service.'.log',
                 'level' => 'debug', 'days' => config('logging.provider_responses.days', 14),
                 'permission' => 0600, 'locking' => true, 'formatter' => JsonFormatter::class,

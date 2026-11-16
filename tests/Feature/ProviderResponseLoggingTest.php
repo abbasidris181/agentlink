@@ -90,6 +90,32 @@ class ProviderResponseLoggingTest extends TestCase
         $this->assertSame('[REDACTED]', $body['nested']['api_key']);
     }
 
+    #[TestWith(['monnify', 'monielinks'])]
+    #[TestWith(['monielinks', 'monnify'])]
+    public function test_payment_provider_responses_append_to_separate_fixed_filenames_without_daily_rotation(string $service, string $otherService): void
+    {
+        $response = new Response(Http::response(['message' => 'Account created', 'access_token' => 'secret-token'])->wait());
+        ProviderResponseLogger::response($service, $response, ['operation' => 'create-account']);
+        $this->travel(1)->days();
+        ProviderResponseLogger::response($service, $response, ['operation' => 'verify-payment']);
+        ProviderResponseLogger::failure($service, new ConnectionException('private-credential'), ['operation' => 'authenticate']);
+        ProviderResponseLogger::response($otherService, $response, ['operation' => 'other-provider']);
+
+        $path = $this->logDirectory.'/'.$service.'.log';
+        $this->assertFileExists($path);
+        $this->assertSame([], glob($this->logDirectory.'/'.$service.'-*.log'));
+        $entries = array_map(fn (string $line): array => json_decode($line, true, flags: JSON_THROW_ON_ERROR), file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES));
+        $this->assertCount(3, $entries);
+        $this->assertSame(['create-account', 'verify-payment', 'authenticate'], array_column(array_column($entries, 'context'), 'operation'));
+        $this->assertSame(ConnectionException::class, $entries[2]['context']['error_type']);
+        $this->assertStringNotContainsString('secret-token', File::get($path));
+        $this->assertStringNotContainsString('private-credential', File::get($path));
+        $this->assertSame(0600, fileperms($path) & 0777);
+        $otherEntries = file($this->logDirectory.'/'.$otherService.'.log', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $this->assertCount(1, $otherEntries);
+        $this->assertSame($otherService, json_decode($otherEntries[0], true, flags: JSON_THROW_ON_ERROR)['context']['service']);
+    }
+
     public function test_malformed_error_bodies_and_connection_failures_are_saved_without_secret_exception_messages(): void
     {
         ProviderResponseLogger::response('whatsapp', new Response(Http::response('upstream error: configured-secret', 502)->wait()), ['send_id' => 42], ['configured-secret']);

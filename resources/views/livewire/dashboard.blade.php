@@ -145,7 +145,7 @@
             @else
             <div class="mx-auto max-w-5xl">
             <div class="mb-10 grid grid-cols-1 items-stretch gap-5 xl:grid-cols-12">
-                <section x-data aria-labelledby="wallet-heading" class="relative flex min-h-72 min-w-0 flex-col justify-between overflow-hidden rounded-3xl xl:col-span-5 bg-ink p-6 text-white shadow-xl shadow-slate-400/30 sm:p-8 dark:shadow-black/40">
+                <section x-data wire:poll.15s.visible aria-labelledby="wallet-heading" class="relative flex min-h-72 min-w-0 flex-col justify-between overflow-hidden rounded-3xl xl:col-span-5 bg-ink p-6 text-white shadow-xl shadow-slate-400/30 sm:p-8 dark:shadow-black/40">
                     <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-indigo-500/10" aria-hidden="true"></div>
                     <div class="pointer-events-none absolute right-0 top-0 size-80 rounded-full bg-indigo-500/10 blur-3xl" aria-hidden="true"></div>
                     <h1 id="wallet-heading" class="break-words text-2xl font-bold tracking-tight sm:text-3xl">Welcome back, {{ auth()->user()->first_name ?: auth()->user()->name }}.</h1>
@@ -166,9 +166,10 @@
                             </a>
                         </div>
                     </div>
-                    <dialog x-ref="walletDialog" aria-labelledby="wallet-dialog-heading" class="fixed inset-0 m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-slate-900 shadow-2xl backdrop:bg-slate-950/50 backdrop:backdrop-blur-sm dark:border-slate-700 dark:bg-surface-dark dark:text-slate-100">
+                    <dialog wire:ignore.self x-ref="walletDialog" aria-labelledby="wallet-dialog-heading" class="fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-2xl border border-slate-200 bg-white p-8 text-slate-900 shadow-2xl backdrop:bg-slate-950/50 backdrop:backdrop-blur-sm dark:border-slate-700 dark:bg-surface-dark dark:text-slate-100">
                         <h2 id="wallet-dialog-heading" class="text-xl font-bold">Fund Wallet</h2>
-                        <p class="mt-3 text-sm leading-6 text-slate-500 dark:text-muted-light">Wallet funding is not available yet. Please check back soon.</p>
+                        <livewire:wallet-funding />
+                        <livewire:monielinks-funding />
                         <form method="dialog" class="mt-6">
                             <button type="submit" autofocus class="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Back to dashboard</button>
                         </form>
@@ -227,7 +228,7 @@
                     </div>
 
                 </div>
-                <div class="grid grid-cols-3 gap-2 sm:gap-3 lg:grid-cols-4" aria-live="polite" aria-label="Service results">
+                <div class="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4" aria-live="polite" aria-label="Service results">
                     @foreach ($this->services as $serviceId => $service)
                         <article wire:key="card-{{ $serviceId }}" @class([
                             'group relative flex min-h-32 min-w-0 flex-col items-center gap-2 overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-2 text-center shadow-sm transition duration-200 motion-reduce:transform-none sm:min-h-40 sm:gap-3 sm:p-3 dark:border-slate-800 dark:bg-surface-dark dark:shadow-black/20',

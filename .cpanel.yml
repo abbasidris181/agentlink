@@ -1,36 +1,61 @@
 ---
 deployment:
   tasks:
-    # Replace this with the existing live Laravel directory, separate from this repository.
-    - export DEPLOYPATH=/home/kvskyspq/agentlink.ng
-    - >-
-      if [ "$DEPLOYPATH" = /home/USERNAME/apps/obb ]; then
-      echo 'Set DEPLOYPATH in .cpanel.yml to your live Laravel directory before deploying.' >&2;
-      exit 1;
-      fi
-    - test -d "$DEPLOYPATH"
-    - >-
-      /usr/bin/rsync -a
-      --exclude='/.git/'
-      --exclude='/.github/'
-      --exclude='/tests/'
-      --exclude='/phpunit.xml'
-      --exclude='/.phpunit*'
-      --exclude='/.env*'
-      --exclude='/vendor/'
-      --exclude='/node_modules/'
-      --exclude='/storage/'
-      --exclude='/.agents/'
-      --exclude='/.ai/'
-      --exclude='/.claude/'
-      --exclude='/.codex/'
-      --exclude='/.junie/'
-      --exclude='/.idea/'
-      --exclude='/.vscode/'
-      --exclude='/AGENTS.md'
-      --exclude='/CLAUDE.md'
-      --exclude='/README.md'
-      --exclude='/compose.yaml'
-      --exclude='/.cpanel.yml'
-      ./ "$DEPLOYPATH/"
-    - /opt/cpanel/ea-php85/root/usr/bin/php /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction --working-dir="$DEPLOYPATH"
+    # Clone into a separate directory, for example /home/kvskyspq/repositories/obb.
+    # Exclusions apply to deployment, not Git cloning or pulling.
+    - |-
+      set -eu
+      DEPLOYPATH=/home/kvskyspq/agentlink.ng
+      SOURCEPATH="$(pwd -P)"
+      test -d "$DEPLOYPATH"
+      DEPLOYPATH="$(cd "$DEPLOYPATH" && pwd -P)"
+      case "$DEPLOYPATH/" in
+        "$SOURCEPATH/"*)
+          echo 'The live site must be outside the Git repository. Clone into /home/kvskyspq/repositories/obb, then deploy to /home/kvskyspq/agentlink.ng.' >&2
+          exit 1
+          ;;
+      esac
+      case "$SOURCEPATH/" in
+        "$DEPLOYPATH/"*)
+          echo 'The Git repository must be outside the live site. Use /home/kvskyspq/repositories/obb for the repository.' >&2
+          exit 1
+          ;;
+      esac
+      /usr/bin/rsync -a \
+        --exclude='/.git' \
+        --exclude='/.github/' \
+        --exclude='/tests/' \
+        --exclude='/phpunit.xml*' \
+        --exclude='/.phpunit*' \
+        --exclude='/.env*' \
+        --exclude='/auth.json' \
+        --exclude='/vendor/' \
+        --exclude='/node_modules/' \
+        --exclude='/storage/' \
+        --exclude='/bootstrap/cache/*.php' \
+        --exclude='/public/hot' \
+        --exclude='/public/storage' \
+        --exclude='/.agents/' \
+        --exclude='/.ai/' \
+        --exclude='/.claude/' \
+        --exclude='/.codex/' \
+        --exclude='/.junie/' \
+        --exclude='/.idea/' \
+        --exclude='/.vscode/' \
+        --exclude='/AGENTS.md' \
+        --exclude='/CLAUDE.md' \
+        --exclude='/README.md' \
+        --exclude='/compose.yaml' \
+        --exclude='/compose.yml' \
+        --exclude='/docker-compose.yml' \
+        --exclude='/docker-compose.yaml' \
+        --exclude='/package.json' \
+        --exclude='/package-lock.json' \
+        --exclude='/vite.config.*' \
+        --exclude='/pint.json' \
+        --exclude='/.editorconfig' \
+        --exclude='/.gitattributes' \
+        --exclude='/.gitignore' \
+        --exclude='/.cpanel.yml' \
+        "$SOURCEPATH/" "$DEPLOYPATH/"
+      /opt/cpanel/ea-php85/root/usr/bin/php /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction --working-dir="$DEPLOYPATH"

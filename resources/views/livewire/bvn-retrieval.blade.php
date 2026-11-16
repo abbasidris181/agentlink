@@ -47,17 +47,17 @@
                 <div wire:key="crm-retrieval" class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <div>
                         <label for="retrieval-agentCode" class="mb-2 block text-sm font-medium">Agent Code</label>
-                        <input wire:model="agentCode" id="retrieval-agentCode" name="agentCode" type="text" autocomplete="off" required maxlength="100" aria-describedby="agentCode-error" @error('agentCode') aria-invalid="true" @enderror class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-800 font-mono">
+                        <input wire:model="agentCode" placeholder="Enter your agent code" id="retrieval-agentCode" name="agentCode" type="text" autocomplete="off" required maxlength="100" aria-describedby="agentCode-error" @error('agentCode') aria-invalid="true" @enderror class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-800 font-mono">
                         @error('agentCode') <p id="agentCode-error" role="alert" class="mt-2 text-xs text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label for="retrieval-ticketId" class="mb-2 block text-sm font-medium">Ticket ID</label>
-                        <input wire:model="ticketId" id="retrieval-ticketId" name="ticketId" type="text" autocomplete="off" required maxlength="100" aria-describedby="ticketId-error" @error('ticketId') aria-invalid="true" @enderror class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-800 font-mono">
+                        <input wire:model="ticketId" placeholder="Enter your ticket ID" id="retrieval-ticketId" name="ticketId" type="text" autocomplete="off" required maxlength="100" aria-describedby="ticketId-error" @error('ticketId') aria-invalid="true" @enderror class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-800 font-mono">
                         @error('ticketId') <p id="ticketId-error" role="alert" class="mt-2 text-xs text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label for="retrieval-bmsTicket" class="mb-2 block text-sm font-medium">BMS Ticket</label>
-                        <input wire:model="bmsTicket" id="retrieval-bmsTicket" name="bmsTicket" type="text" autocomplete="off" required maxlength="100" aria-describedby="bmsTicket-error" @error('bmsTicket') aria-invalid="true" @enderror class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-800 font-mono">
+                        <input wire:model="bmsTicket" placeholder="Enter your BMS ticket" id="retrieval-bmsTicket" name="bmsTicket" type="text" autocomplete="off" required maxlength="100" aria-describedby="bmsTicket-error" @error('bmsTicket') aria-invalid="true" @enderror class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-800 font-mono">
                         @error('bmsTicket') <p id="bmsTicket-error" role="alert" class="mt-2 text-xs text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
                     </div>
                     <div>

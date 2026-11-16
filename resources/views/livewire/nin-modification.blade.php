@@ -25,7 +25,7 @@
             </fieldset>
             <div>
                 <label for="modification-nin" class="mb-2 block text-sm font-medium">NIN</label>
-                <input id="modification-nin" wire:model="nin" type="text" inputmode="numeric" autocomplete="off" minlength="11" maxlength="11" pattern="[0-9]{11}" required class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-800">
+                <input id="modification-nin" wire:model="nin" placeholder="Enter your 11-digit NIN" type="text" inputmode="numeric" autocomplete="off" minlength="11" maxlength="11" pattern="[0-9]{11}" required class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-800">
                 @error('nin') <p role="alert" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
             </div>
             <div wire:key="modification-fields-{{ $stage }}" class="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -33,7 +33,7 @@
                     <div wire:key="modification-field-{{ $stage }}-{{ $key }}" @class(['sm:col-span-2' => $field['type'] === 'textarea'])>
                         <label for="modification-{{ $key }}" class="mb-2 block text-sm font-medium">{{ $field['label'] }}</label>
                         @if ($field['type'] === 'textarea')
-                            <textarea id="modification-{{ $key }}" wire:model="details.{{ $key }}" rows="4" maxlength="1000" required class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-800"></textarea>
+                            <textarea placeholder="Enter the complete new address" id="modification-{{ $key }}" wire:model="details.{{ $key }}" rows="4" maxlength="1000" required class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-800"></textarea>
                         @elseif ($field['type'] === 'select')
                             <select id="modification-{{ $key }}" wire:model="details.{{ $key }}" required class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-800">
                                 <option value="">Select gender</option>
@@ -41,7 +41,7 @@
                                 <option value="female">Female</option>
                             </select>
                         @else
-                            <input id="modification-{{ $key }}" wire:model="details.{{ $key }}" type="{{ $field['type'] }}" @required($field['required']) @if ($field['type'] === 'date') max="{{ now()->toDateString() }}" @else maxlength="{{ $field['type'] === 'tel' ? 25 : 100 }}" @endif class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-800">
+                            <input id="modification-{{ $key }}" wire:model="details.{{ $key }}" type="{{ $field['type'] }}" @if ($field['type'] !== 'date') placeholder="{{ $field['type'] === 'tel' ? 'Enter the new phone number' : 'Enter '.strtolower($field['label']) }}" @endif @required($field['required']) @if ($field['type'] === 'date') max="{{ now()->toDateString() }}" @else maxlength="{{ $field['type'] === 'tel' ? 25 : 100 }}" @endif class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base dark:border-slate-700 dark:bg-slate-800">
                         @endif
                         @error('details.'.$key) <p role="alert" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
                     </div>

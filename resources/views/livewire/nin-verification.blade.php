@@ -53,7 +53,7 @@
                     @foreach (['first_name' => ['First name', 'given-name'], 'surname' => ['Surname', 'family-name'], 'middle_name' => ['Middle name (optional)', 'additional-name']] as $field => $details)
                         <div>
                             <label for="verification-{{ $field }}" class="mb-2 block text-sm font-medium">{{ $details[0] }}</label>
-                            <input wire:model="{{ $field }}" id="verification-{{ $field }}" name="{{ $field }}" type="text" autocomplete="{{ $details[1] }}" maxlength="100" @required($field !== 'middle_name') aria-describedby="{{ $field }}-error" @error($field) aria-invalid="true" @enderror class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-800">
+                            <input placeholder="Enter your {{ strtolower($details[0]) }}" wire:model="{{ $field }}" id="verification-{{ $field }}" name="{{ $field }}" type="text" autocomplete="{{ $details[1] }}" maxlength="100" @required($field !== 'middle_name') aria-describedby="{{ $field }}-error" @error($field) aria-invalid="true" @enderror class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-800">
                             @error($field) <p id="{{ $field }}-error" role="alert" class="mt-2 text-xs text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
                         </div>
                     @endforeach
